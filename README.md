@@ -1,0 +1,2 @@
+# safeNotes
+笔记
