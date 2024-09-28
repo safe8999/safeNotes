@@ -1,0 +1,22 @@
+#端口扫描：
+sudo nmap --min-rate 10000 -p- 192.10.10.21
+sudo nmap -sT --min-rate 10000 -p- ip -oA nmapscan/ports
+指定以每秒最低10000速率扫描全部端口,结果全格式三种文件格式输出到nmapscan目录ports文件中,不指定-sT的话默认使用-sS扫描技术,-p-:指定1-65535所有端口都扫描
+
+#提取端口：
+ports=$(grep open nmapscan/ports.nmap | awk -F'/' '{print $1}' | paste -sd ',')
+# 搜索nmapscan/ports.nmap中的扫描结果，合并成一行用逗号分隔，指定ports变量赋值
+# 查看ports内容：
+echo $ports
+
+#详细端口信息扫描：
+sudo nmap -sT -sV -sC -O -p22,80,443,888,8888 192.10.10.21 -oA nmapscan/detail
+# -sT指定Tcp协议进行扫描，-sC探测各个服务版本，-sC用默认脚本进行扫描，-O探测操作系统版本，-p指定端口，-oA全格式文件输出到nmapscan/detail中
+
+#udp扫描：
+sudo nmap -sU --top-ports 20 10.10.10.21 -oA nmapscan/udp
+# -sU指定udp协议进行扫描，--top-ports 20常用20个udp端口进行扫描，-oA全格式文件输出到nmapscan/udp中
+
+#漏洞脚本扫描：
+sudo nmap --script=vuln -p22,80,443,888,8888 192.10.10.21 -oA nmapscan/vuln
+# --scrpit-vuln漏洞脚本目录
