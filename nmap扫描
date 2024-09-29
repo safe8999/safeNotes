@@ -20,3 +20,44 @@ sudo nmap -sU --top-ports 20 10.10.10.21 -oA nmapscan/udp
 #漏洞脚本扫描：
 sudo nmap --script=vuln -p22,80,443,888,8888 192.10.10.21 -oA nmapscan/vuln
 # --scrpit-vuln漏洞脚本目录
+
+
+选项说明：nmap -h
+
+-iL：从文件中导入目标主机或目标网段
+-iR：随意选择目标主机
+--exclude：后面跟的主机或网段将不在扫描范围内
+--excludefile：导入文件中的主机或网盾将不在扫描范围中
+与主机发现方法相关的参数：
+-sL：List Scan（列表扫描），仅列举指定目标的IP，不进行主机发现
+-sn：Ping Scan，只进行主机发现，不进行端口扫描
+-Pn：将所有指定的主机视作已开启，跳过主机发现的过程
+-PS/PA/PU/PY[portlist]：使用TCP SYN/ACK或SCTP INIT/ECHO方式发现
+-PE/PP/PM：使用ICMP echo、timestamp\netmask请求包发现主机
+-PO[protocol list]：使用IP协议包探测对方主机是否开启
+-n/-R：-n代表进行DNS解析；-R表示总是进行DNS解析
+--dns-servers <serv1[,serv2],…>: 指定dns服务器
+--system-dns：指定使用系统的DNS服务器
+--traceroute：追踪每个路由节点
+常见的端口扫描方法相关的参数：
+-sS/sT/sA/sW/sM：指定使用TCP SYN/Connect()/ACK、Window/Mainmon scans的方式对目标主机进行扫描
+-sU：指定使用UDP扫描的方式确定目标主机的UDP端口状况
+-sN/sF/sX：指定使用TCP Null/FIN/Xmas scans秘密扫描的方式协助探测对方的TCP端口状态
+--scanflags<flags>：定制TCP包的flags
+-sI<zombie host[:probeport]>：指定使用Idle scan的方式扫描目标主机（前提是需要找到合适的zombie host）
+-sY/sZ：SCTP INIT/COOKIE-ECHO scans扫描SCTP协议端口的开放情况
+-sO：使用IP protocol扫描确定目标机支持的协议类型
+-b<FTP relay host>：只用FTP bounce scan扫描方式
+与端口说明和扫描顺序相关的参数：
+-p<port ranges>：扫描指定的端口
+-F：Fast mode（快速模式），仅扫描TOP 100的端口
+-r：不进行端口随机打乱的操作（如无该参数，Nmap会将要扫描的端口以随意顺序的方式进行扫描，让Nmap的扫描不易被对方防火墙检测到）
+--top-ports<number>：扫描开放概率最高的number个端口
+--port-ratio<ratio>：扫描指定频率以上的端口。
+与版本侦测相关的参数：
+-sV：指定让Nmap进行版本检测
+--version-intensity<level>：指定版本侦测的强度（0~9），默认为7。数值越高，探测出的服务越准确，但是运行时间会比较长
+--version-light：指定使用轻量级侦测方式（intensity 2）
+--version-all：尝试使用所有的probes进行侦测（intensity 9）
+--version-trace：显示出详细的版本侦测过程信息
+扫描命令格式：Nmap+扫描参数+目标地址或网段
