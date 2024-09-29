@@ -1,0 +1,45 @@
+Hydra地址:
+Github:https://github.com/vanhauser-thc/thc-hydra
+
+Hydra安装:
+apt-get update
+apt-get install hydra
+
+Hydra配置代理:
+临时设置环境变量:export HYDRA_PROXY=socks5://3Gk9Sk4Dj5Fi-res-any:ipmart@proxy.ipmart.io:1000
+删除临时环境变量:unset HYDRA_PROXY
+设置永久环境变量:vim /etc/profile
+export HYDRA_PROXY=socks5://3Gk9Sk4Dj5Fi-res-any:ipmart@proxy.ipmart.io:1000
+source /etc/profile  立即生效
+
+hydra指令:hydra -h
+选项	说明						示例
+-h	查看所有可用的命令行选项	hydra -h
+-U	检查模块是否具有可选参数	hydra -U smb
+-l	指定用户名	-l zhangsan
+-p	指定密码	-p 123456
+-C	使用冒号分隔的user:passwd格式，而不是-l/-p	-C zhangsan:123456
+-L	指定用户名字典文件	-L /root/user.dict
+-P	指定密码字典文件	-P /root/passwd.dict
+-M	指定目标IP列表文件	-M /root/ip.dict
+-e	尝试“尝试登录为密码”和“空密码”	-e ns
+-s	指定对应模块使用的端口，例如：如果ssh端口不是默认22，这里可以指定	-s 2222
+-t	指定线程数，默认16	-t 1
+-vV	显示详细破解过程	-vV
+-o	指定将结果输出到文件	-o /result.txt
+-b	指定-o选项输出的结果信息的类型，默认为文本信息，可以自定为jsonv1和json格式。	-b json
+-R	恢复先前中止/崩溃的会话（当hydra被Control-C中止，被杀死或崩溃时，它会留下一个“hydra.restore”文件，其中包含恢复会话所需的所有信息。此会话文件每5分钟写入一次。注意：hydra.restore文件不能复制到不同的平台（例如从小端到大端，或从Solaris到AIX））	-R
+-I	忽略现有的恢复文件（不要等待10秒）	-I
+-S	执行SSL连接	-S
+-f	在使用-M参数后，找到第一对登录用户和密码的时候终止破解	-f
+-W	设置最大超时时间，单位秒，默认30秒	-W 60
+-q	不要打印有关连接错误的消息
+
+测试
+hydra 192.168.234.128 -l root -p 123456 -vV ssh
+
+单IP爆破:
+hydra 192.168.234.128 -l root -P pass.txt -t 64 -f -vV  ssh  -o result.txt
+多IP爆破:
+hydra -M ips.txt -l admin -P pswd.txt  -t 64  -vV -o result.txt ssh
+用户名   IP列表   用户名      密码列表  线程数 详细信息 输出到文件
