@@ -36,11 +36,12 @@ Cobalt Strike将询问你是否识别此团队服务器的SHA256哈希,指纹校
 
 Cobalt Strike将会记住这个SHA256哈希值,以便将来连接.可以通过Cobalt Strike -> Preferences -> Fingerprints 来管理这些哈希值。  
 
+
 ## 隐藏特征码(免杀手法之内)
 ##### 开启禁Ping动作  
-`vim /etc/sysctl.con`
-`123`
-
+ming'l`vim /etc/sysctl.con`  
+`net.ipv4.icmp_echo_ignore_all = 1`  
+`sysctl -p`  
 
 ##### 修改Cobalt Strike默认端口
 ##### 修改CS默认证书
