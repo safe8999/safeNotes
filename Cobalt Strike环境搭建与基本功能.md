@@ -26,7 +26,7 @@ Password：连接到服务器的密码
 
 第一次用连接到此团队服务器, 会弹出确认指纹  
 Cobalt Strike将询问你是否识别此团队服务器的SHA256哈希,指纹校验的主要作用是防篡改  
-点击是,连接登录到服务端并打开客户端用户界面
+点击是,连接登录到服务端并打开客户端用户界面   
 
 ![alt text](image/image-2.png)  
 
@@ -41,13 +41,14 @@ Cobalt Strike将会记住这个SHA256哈希值,以便将来连接.可以通过Co
 开启禁Ping动作、修改CS默认端口、修改CS默认证书、C2profile混淆流量、nginx反向代理
 
 #### 开启禁Ping动作:  
-        命令: sudo vim /etc/sysctl.con  
-        添加一行: sudo net.ipv4.icmp_echo_ignore_all = 1  
-        刷新配置: sudo sysctl -p  
+        命令: sudo vim /etc/sysctl.conf
+        添加一行: net.ipv4.icmp_echo_ignore_all = 1
+        刷新配置: sudo sysctl -p
 
 #### 修改CS默认端口:  
-        编辑teamserver文件: sudo vim teamserver  
-        修改port=50050为其他端口  
+        cd到cs服务端: cd CobaltStrike4.8/Server
+        编辑teamserver文件: vim teamserver
+        修改port=50050为其他端口
         如果有防火墙记得开放规则: sudo ufw allow 19001
 
 #### 修改CS默认证书:    
@@ -57,7 +58,7 @@ Cobalt Strike默认证书中含有与cs相关的特征，已经被waf厂商标�
 `sudo rm -rf cobaltstrike.store`   
 
 利用keytool生成新的一个无特征的证书文件cobaltstrike.store  
-    `keytool -keystore cobaltstrike.store -storepass 123456 -keypass 123456 -genkey -keyalg RSA -alias 360.com -dname "CN=Microsoft Windows, OU=MOPR, O=Microsoft Corporation, L=Redmond, ST=Washington, C=US"`  
+    `keytool -keystore cobaltstrike.store -storepass 123456 -keypass 123456 -genkey -keyalg RSA -alias 360.com -dname "CN=Microsoft Windows, OU=MOPR, O=Microsoft Corporation, L=Redmond, ST=Washington, C=US"`
     -keystore 生成的store名  
     -storepass 指定更改密钥库的储存口令  
     -keypass 指定更改条目的密钥口令  
@@ -66,13 +67,7 @@ Cobalt Strike默认证书中含有与cs相关的特征，已经被waf厂商标�
     -dname 指定所有者信息  
 
 证书生成完毕后，查看一下是否是新的证书内容   
-查看cs证书文件内容：`sudo keytool -list -v -keystore cobaltstrike.store`   
-
-修改teamserver文件里面的keyname.store,把里面的key文件名keyStore和key密码keyStorePassword改了     
-`sudo vim teamserver`   
-
-建议同时修改teamserver中的keytool，防止证书被删除后自动生成默认证书。  
-`keytool -keystore cobaltstrike.store -storepass 123456 -keypass 123456 -genkey -keyalg RSA -alias 360.com -dname "CN=Microsoft Windows, OU=MOPR, O=Microsoft Corporation, L=Redmond, ST=Washington, C=US`   
+查看cs证书文件内容：`sudo keytool -list -v -keystore cobaltstrike.store`    
 
 #### C2profile混淆流量:  
 修改Beacon与cs通信时候的流量特征，创建一个c2.profile文件(名字任意)   
@@ -80,8 +75,8 @@ Cobalt Strike默认证书中含有与cs相关的特征，已经被waf厂商标�
 
 https://github.com/threatexpress/malleable-c2    
 
-编辑c2.profile，把jquery-c2.4.9.profile的内容复制进来，可自由修改部分内容:   
-`sudo  c2.profile`    
+编辑c2.profile，把jquery-c2.4.8.profile的内容复制进来，可自由修改部分内容:   
+`sudo vim c2.profile`    
 
 然后使用c2.profile方式启动teamserver   
 `sudo ./teamserver 192.168.2.96 passwd332 c2.profile`   
