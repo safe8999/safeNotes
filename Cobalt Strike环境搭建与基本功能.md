@@ -16,6 +16,7 @@ sudo ./teamserver 192.168.80.146 cspasswd.9
 windows运行客户端，也需要有JDK环境  
 运行cobaltstrike-client.cmd文件  
 输入对应服务端上设置的Host Port User Password  
+
 ![alt text](image-1.png)  
 Alias：输入主机别名或使用默认值，不能为空或以*开头。  
 Host：指定团队服务器的IP地址，不能为空  
