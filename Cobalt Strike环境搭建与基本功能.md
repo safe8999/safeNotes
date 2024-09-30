@@ -65,12 +65,13 @@ Cobalt Strike默认证书中含有与cs相关的特征，已经被waf厂商标�
     -alias 自定义别名  
     -dname 指定所有者信息  
 
-证书生成完毕后，查看一下是否是新的证书内容
+证书生成完毕后，查看一下是否是新的证书内容   
 查看cs证书文件内容：`sudo keytool -list -v -keystore cobaltstrike.store`   
 
-修改teamserver文件里面的keyname.store,把里面的key文件名keyStore和key密码keyStorePassword改了  
+修改teamserver文件里面的keyname.store,把里面的key文件名keyStore和key密码keyStorePassword改了     
+`sudo vim teamserver`   
 
-同时建议修改teamserver中的keytool，防止证书被删除后自动生成默认证书。  
+建议同时修改teamserver中的keytool，防止证书被删除后自动生成默认证书。  
 `keytool -keystore cobaltstrike.store -storepass 123456 -keypass 123456 -genkey -keyalg RSA -alias 360.com -dname "CN=Microsoft Windows, OU=MOPR, O=Microsoft Corporation, L=Redmond, ST=Washington, C=US`   
 
 ##### C2profile混淆流量:  
@@ -88,6 +89,7 @@ https://github.com/threatexpress/malleable-c2
 客户端开启CS的监听，触发木马   
 使用wireshark抓取数据包，查看流量特征是否被混淆   
 发现请求改成了我们在c2.profile中编写的URL、UA等信息时，则修改成功。   
+
 
 ##### nginx反向代理:   
 
