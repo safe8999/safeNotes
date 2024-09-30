@@ -17,7 +17,7 @@ windows运行客户端，也需要有JDK环境
 运行cobaltstrike-client.cmd文件  
 输入对应服务端上设置的Host Port User Password  
 
-![alt text](image-1.png)  
+![alt text](image/image-1.png)  
 Alias：输入主机别名或使用默认值，不能为空或以*开头。  
 Host：指定团队服务器的IP地址，不能为空  
 Port：服务器的端口（默认为50050）  
@@ -28,9 +28,9 @@ Password：连接到服务器的密码
 Cobalt Strike将询问你是否识别此团队服务器的SHA256哈希,指纹校验的主要作用是防篡改  
 点击是,连接登录到服务端并打开客户端用户界面
 
-![alt text](image-2.png)  
+![alt text](image/image-2.png)  
 
-![alt text](image-4.png)  
+![alt text](image/image-4.png)  
 
 如果连接不上，查看服务端防火墙是否开启默认端口或者指定的端口  
 
