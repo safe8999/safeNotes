@@ -51,16 +51,16 @@ Cobalt Strike将会记住这个SHA256哈希值,以便将来连接.可以通过Co
 ##### 修改CS默认证书:    
 Cobalt Strike默认证书中含有与cs相关的特征，已经被waf厂商标记烂了，我们要重新生成一个新的证书，这里我们用JDK自带的keytool证书工具来生成新证书 
 
-删除服务端Server目录下的cobaltstrike.store文件  
+删除服务端Server目录下的cobaltstrike.store文件:  
+`rm -rf cobaltstrike.store`   
 利用keytool生成新的一个无特征的证书文件cobaltstrike.store  
-    `keytool -keystore cobaltstrike.store -storepass 123456 -keypass 123456 -genkey -keyalg RSA -alias 360.com -dname "CN=Microsoft Windows, OU=MOPR, O=Microsoft Corporation, L=Redmond, ST=Washington, C=US"` 
+    `keytool -keystore cobaltstrike.store -storepass 123456 -keypass 123456 -genkey -keyalg RSA -alias 360.com -dname "CN=Microsoft Windows, OU=MOPR, O=Microsoft Corporation, L=Redmond, ST=Washington, C=US"`  
     -keystore 生成的store名  
     -storepass 指定更改密钥库的储存口令  
     -keypass 指定更改条目的密钥口令  
     -genkey -keyalg RSA 指定算法  
     -alias 自定义别名  
     -dname 指定所有者信息  
-
 查看cs证书文件内容：`keytool -list -v -keystore cobaltstrike.store`   
 
 
