@@ -36,6 +36,19 @@ Cobalt Strike将询问你是否识别此团队服务器的SHA256哈希,指纹校
 
 Cobalt Strike将会记住这个SHA256哈希值,以便将来连接.可以通过Cobalt Strike -> Preferences -> Fingerprints 来管理这些哈希值。  
 
+## 隐藏特征码(免杀手法之内)
+##### 开启禁Ping动作  
+`vim /etc/sysctl.con`
+
+
+##### 修改Cobalt Strike默认端口
+##### 修改CS默认证书
+##### C2profile混淆流量
+##### nginx反向代理
+
+
+
+
 杀毒软件查杀方式：特征码、动态查杀、云查杀  
 
 免杀：隐藏特征码、配置Nginx反向代理  
