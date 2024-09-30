@@ -2,7 +2,7 @@ Cobalt Strike基于Java环境开发，所以如果要使用这个工具一定要
 
 Cobalt Strike4.8
 
-服务端  
+## 服务端  
 启动Cobalt Strike需要JDK的支持，所以需要安装Java环境，如果服务端是kali，默认安装了java环境  
 文件复制进linux服务器  
 执行ls -l 查看TeamServer跟TeamServerImage是否有执行权限  
@@ -12,7 +12,7 @@ sudo chmod +x teamserver TeamServerImage
 sudo ./teamserver 192.168.80.146 cspasswd.9  
 这里填本机ip地址跟密码,默认端口为50050  
 
-客户端  
+## 客户端  
 windows运行客户端，也需要有JDK环境  
 运行cobaltstrike-client.cmd文件  
 输入对应服务端上设置的Host Port User Password  
