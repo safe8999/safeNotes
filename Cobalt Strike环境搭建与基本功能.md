@@ -39,9 +39,9 @@ Cobalt Strike将会记住这个SHA256哈希值,以便将来连接.可以通过Co
 
 ## 隐藏特征码(免杀手法之内)
 ##### 开启禁Ping动作  
-ming'l`vim /etc/sysctl.con`  
-`net.ipv4.icmp_echo_ignore_all = 1`  
-`sysctl -p`  
+命令 `vim /etc/sysctl.con`  
+添加一行 `net.ipv4.icmp_echo_ignore_all = 1`  
+刷新配置 `sysctl -p`  
 
 ##### 修改Cobalt Strike默认端口
 ##### 修改CS默认证书
