@@ -55,6 +55,7 @@ Cobalt Strike默认证书中含有与cs相关的特征，已经被waf厂商标�
 
 删除服务端Server目录下的cobaltstrike.store文件:  
 `sudo rm -rf cobaltstrike.store`   
+
 利用keytool生成新的一个无特征的证书文件cobaltstrike.store  
     `keytool -keystore cobaltstrike.store -storepass 123456 -keypass 123456 -genkey -keyalg RSA -alias 360.com -dname "CN=Microsoft Windows, OU=MOPR, O=Microsoft Corporation, L=Redmond, ST=Washington, C=US"`  
     -keystore 生成的store名  
@@ -77,6 +78,7 @@ Cobalt Strike默认证书中含有与cs相关的特征，已经被waf厂商标�
 `sudo touch c2.profile` 
 
 https://github.com/threatexpress/malleable-c2    
+
 编辑c2.profile，把jquery-c2.4.9.profile的内容复制进来，可自由修改部分内容:   
 `sudo  c2.profile`    
 
