@@ -98,10 +98,11 @@ nginx反向代理可以用来隐藏C2服务器，把cs监听端口给隐藏起�
 
 这里我们用nginx做反向代理，通过ua过滤流量，然后防火墙限制端口只能让127.0.0.1访问shellcode端口
 
-先到我们的服务器上安装nginx服务  
+先到我们的服务器上安装nginx服务，kali自带  
+
 找到nginx安装路径:`whereis nginx`  
 
-打开nginx配置文件 `vim /usr/local/nginx/conf/nginx.conf` 具体看个人的nginx安装位置  
+打开nginx配置文件 `vim /etc/nginx/sites-available/default` kali自带的nginx配置文件在这个位置，具体看个人的nginx安装位置  
 
 在http中的server中配置中添加
         location ~*jquery {
@@ -113,6 +114,7 @@ nginx反向代理可以用来隐藏C2服务器，把cs监听端口给隐藏起�
         }
 
 配置中的ua根据你的profile文件中设置的useragent所定，profile中的ua也可以自行修改  
+重启nginx: `sudo service nginx restart`
 
 设置防火墙只能让127.0.0.1访问监听端口  
         iptables -I INPUT -p TCP --dport 2095 -j DROP
