@@ -40,17 +40,17 @@ Cobalt Strike将会记住这个SHA256哈希值,以便将来连接.可以通过Co
 ## 隐藏特征码-服务端(免杀手法之一)
 开启禁Ping动作、修改CS默认端口、修改CS默认证书、C2profile混淆流量、nginx反向代理
 
-##### 开启禁Ping动作:  
+#### 开启禁Ping动作:  
         命令: sudo vim /etc/sysctl.con  
         添加一行: sudo net.ipv4.icmp_echo_ignore_all = 1  
         刷新配置: sudo sysctl -p  
 
-##### 修改CS默认端口:  
+#### 修改CS默认端口:  
         编辑teamserver文件: sudo vim teamserver  
         修改port=50050为其他端口  
         如果有防火墙记得开放规则: sudo ufw allow 19001
 
-##### 修改CS默认证书:    
+#### 修改CS默认证书:    
 Cobalt Strike默认证书中含有与cs相关的特征，已经被waf厂商标记烂了，我们要重新生成一个新的证书，这里我们用JDK自带的keytool证书工具来生成新证书 
 
 删除服务端Server目录下的cobaltstrike.store文件:  
@@ -74,7 +74,7 @@ Cobalt Strike默认证书中含有与cs相关的特征，已经被waf厂商标�
 建议同时修改teamserver中的keytool，防止证书被删除后自动生成默认证书。  
 `keytool -keystore cobaltstrike.store -storepass 123456 -keypass 123456 -genkey -keyalg RSA -alias 360.com -dname "CN=Microsoft Windows, OU=MOPR, O=Microsoft Corporation, L=Redmond, ST=Washington, C=US`   
 
-##### C2profile混淆流量:  
+#### C2profile混淆流量:  
 修改Beacon与cs通信时候的流量特征，创建一个c2.profile文件(名字任意)   
 `sudo touch c2.profile` 
 
@@ -91,7 +91,7 @@ https://github.com/threatexpress/malleable-c2
 发现请求改成了我们在c2.profile中编写的URL、UA等信息时，则修改成功。   
 
 
-##### nginx反向代理:   
+#### nginx反向代理:   
 
 
 
