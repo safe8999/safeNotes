@@ -118,6 +118,7 @@ nginx反向代理可以用来隐藏C2服务器，把cs监听端口给隐藏起�
 重启nginx: `sudo service nginx restart`
 
 设置防火墙只能让127.0.0.1访问监听端口  
+
         iptables -I INPUT -p TCP --dport 2095 -j DROP
         iptables -I INPUT -s 127.0.0.1 -p TCP --dport 2095 -j ACCEPT
         service iptables restart
