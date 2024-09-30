@@ -105,6 +105,7 @@ nginx反向代理可以用来隐藏C2服务器，把cs监听端口给隐藏起�
 打开nginx配置文件 `vim /etc/nginx/sites-available/default` kali自带的nginx配置文件在这个位置，具体看个人的nginx安装位置  
 
 在http中的server中配置中添加   
+
         location ~*jquery {
             if ( $http_user_agent != "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko")
             {
