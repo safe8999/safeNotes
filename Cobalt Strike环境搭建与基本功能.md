@@ -1,9 +1,9 @@
-Cobalt Strike基于Java环境开发，所以如果要使用这个工具一定要安装Java环境。（工具的组成为服务端 + 客户端）
+Cobalt Strike基于Java环境开发，所以一定要安装Java环境。（工具的组成为服务端 + 客户端）
 
 Cobalt Strike4.8
 
 ### 服务端  
-启动Cobalt Strike需要JDK的支持，所以需要安装Java环境，如果服务端是kali，默认安装了java环境  
+启动Cobalt Strike需要JDK的支持，需要安装Java环境，如果服务端是kali，默认安装了java环境  
 文件复制进linux服务器  
 执行`ls -l` 查看TeamServer跟TeamServerImage是否有执行权限  
 如果TeamServer跟TeamServerImage不具备x执行权限，执行如下命令添加执行权限  
