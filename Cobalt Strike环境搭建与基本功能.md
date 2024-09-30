@@ -111,7 +111,7 @@ nginx反向代理可以用来隐藏C2服务器，把cs监听端口给隐藏起�
             {
                 return 404;
             }
-            proxy_pass http://127.0.0.1:2095;
+            proxy_pass http://127.0.0.1:12095;
         }
 
 配置中的ua根据你的profile文件中设置的useragent所定，profile中的ua也可以自行修改  
@@ -119,8 +119,8 @@ nginx反向代理可以用来隐藏C2服务器，把cs监听端口给隐藏起�
 
 设置防火墙只能让127.0.0.1访问监听端口  
 
-        iptables -I INPUT -p TCP --dport 2095 -j DROP
-        iptables -I INPUT -s 127.0.0.1 -p TCP --dport 2095 -j ACCEPT
+        iptables -I INPUT -p TCP --dport 12095 -j DROP
+        iptables -I INPUT -s 127.0.0.1 -p TCP --dport 12095 -j ACCEPT
         service iptables restart
 
 
