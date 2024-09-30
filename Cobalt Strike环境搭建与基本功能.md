@@ -38,21 +38,23 @@ Cobalt Strike将会记住这个SHA256哈希值,以便将来连接.可以通过Co
 
 
 ## 隐藏特征码-服务端(免杀手法之一)
+开启禁Ping动作、修改CS默认端口、修改CS默认证书、C2profile混淆流量、nginx反向代理
+
 ##### 开启禁Ping动作:  
-        命令: vim /etc/sysctl.con  
-        添加一行: net.ipv4.icmp_echo_ignore_all = 1  
-        刷新配置: sysctl -p  
+        命令: sudo vim /etc/sysctl.con  
+        添加一行: sudo net.ipv4.icmp_echo_ignore_all = 1  
+        刷新配置: sudo sysctl -p  
 
 ##### 修改CS默认端口:  
-        编辑teamserver文件: vim teamserver  
+        编辑teamserver文件: sudo vim teamserver  
         修改port=50050为其他端口  
-        如果有防火墙记得开放规则: ufw allow 19001
+        如果有防火墙记得开放规则: sudo ufw allow 19001
 
 ##### 修改CS默认证书:    
 Cobalt Strike默认证书中含有与cs相关的特征，已经被waf厂商标记烂了，我们要重新生成一个新的证书，这里我们用JDK自带的keytool证书工具来生成新证书 
 
 删除服务端Server目录下的cobaltstrike.store文件:  
-`rm -rf cobaltstrike.store`   
+`sudo rm -rf cobaltstrike.store`   
 利用keytool生成新的一个无特征的证书文件cobaltstrike.store  
     `keytool -keystore cobaltstrike.store -storepass 123456 -keypass 123456 -genkey -keyalg RSA -alias 360.com -dname "CN=Microsoft Windows, OU=MOPR, O=Microsoft Corporation, L=Redmond, ST=Washington, C=US"`  
     -keystore 生成的store名  
@@ -63,77 +65,27 @@ Cobalt Strike默认证书中含有与cs相关的特征，已经被waf厂商标�
     -dname 指定所有者信息  
 
 证书生成完毕后，查看一下是否是新的证书内容
-查看cs证书文件内容：`keytool -list -v -keystore cobaltstrike.store`   
+查看cs证书文件内容：`sudo keytool -list -v -keystore cobaltstrike.store`   
 
 修改teamserver文件里面的keyname.store,把里面的key文件名keyStore和key密码keyStorePassword改了  
 
 同时建议修改teamserver中的keytool，防止证书被删除后自动生成默认证书。  
 `keytool -keystore cobaltstrike.store -storepass 123456 -keypass 123456 -genkey -keyalg RSA -alias 360.com -dname "CN=Microsoft Windows, OU=MOPR, O=Microsoft Corporation, L=Redmond, ST=Washington, C=US`   
 
-##### C2profile混淆流量:   
-https://github.com/threatexpress/malleable-c2   
-编辑c2.profile的内容如下，可自由修改部分内容:`vim c2.profile`    
-        http-get {
-            set uri "/image/";
-            client {
-                header "Accept" "text/html,application/xhtml+xml,application/xml;q=0.9,*/*l;q=0.8";
-                header "Referer" "http://www.bing.com";
-                header "Host" "www.bing.com";
-                header "Pragma" "no-cache";
-                header "Cache-Control" "no-cache";
-                metadata {
-                    netbios;
-                    append ".jpg";
-                    uri-append;
-                }
-            }
+##### C2profile混淆流量:  
+修改Beacon与cs通信时候的流量特征，创建一个c2.profile文件(名字任意)   
+`sudo touch c2.profile` 
 
-            server {
-                header "Content-Type" "img/jpg";
-                header "Server" "Microsoft-IIS/6.0";
-                header "X-Powered-By" "ASP.NET";
-                output {
-                    base64;
-                    print;
-                }
-            }
-        }
+https://github.com/threatexpress/malleable-c2    
+编辑c2.profile，把jquery-c2.4.9.profile的内容复制进来，可自由修改部分内容:   
+`sudo  c2.profile`    
 
-        http-post {
-            set uri "/email/";
-            client {
-                header "Content-Type" "application/octet-stream";
-                header "Referer" "http://www.google.com";
-                header "Host" "www.bing.com";
-                header "Pragma" "no-cache";
-                header "Cache-Control" "no-cache";
-                id {
-                    netbiosu;
-                    append ".png";
-                    uri-append;
-                }
-                output {
-                    base64;
-                    print;
-                }
-            }
-            server {
-                header "Content-Type" "img/jpg";
-                header "Server" "Microsoft-IIS/6.0";
-                header "X-Powered-By" "ASP.NET";
-                output {
-                    base64;
-                    print;
-                }
-            }
-        }
+然后使用c2.profile方式启动teamserver   
+`sudo ./teamserver 192.168.2.96 passwd332 c2.profile`   
 
-然后使用c2profile方式启动teamserver   
-        sudo ./teamserver 192.168.2.96 passwd332 c2profile   
-
-开启CS的监听，触发木马   
+客户端开启CS的监听，触发木马   
 使用wireshark抓取数据包，查看流量特征是否被混淆   
-发现请求改成了我们在c2profile中编写的URL、UA等信息时，则修改成功。   
+发现请求改成了我们在c2.profile中编写的URL、UA等信息时，则修改成功。   
 
 ##### nginx反向代理:   
 
