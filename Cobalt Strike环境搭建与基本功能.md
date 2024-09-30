@@ -37,7 +37,7 @@ Cobalt Strike将询问你是否识别此团队服务器的SHA256哈希,指纹校
 Cobalt Strike将会记住这个SHA256哈希值,以便将来连接.可以通过Cobalt Strike -> Preferences -> Fingerprints 来管理这些哈希值。  
 
 
-## 隐藏特征码-服务端(免杀手法之一)
+## 隐藏特征码-服务端(免杀手法之一)  
 开启禁Ping动作、修改CS默认端口、修改CS默认证书、C2profile混淆流量、nginx反向代理
 
 #### 开启禁Ping动作:  
@@ -87,11 +87,48 @@ https://github.com/threatexpress/malleable-c2
 `sudo ./teamserver 192.168.2.96 passwd332 c2.profile`   
 
 客户端开启CS的监听，触发木马   
-使用wireshark抓取数据包，查看流量特征是否被混淆   
+抓包，查看流量特征是否被混淆   
 发现请求改成了我们在c2.profile中编写的URL、UA等信息时，则修改成功。   
 
+#### 部署nginx反向代理:   
+nginx反向代理可以用来隐藏C2服务器,把cs监听端口给隐藏起来了,要不然默认geturl，就能获取到我们的shellcode，加密shellcode的密钥又是固定的(3.x 0x69，4.x 0x2e)，所以能从shellcode中解出c2域名等配置信息。  
 
-#### nginx反向代理:   
+不修改这个特征的话nmap 一扫就出来  
+`nmap [ip][port] --script=grab_beacon_config.nse`  
+
+修改这个特征有两个方法，
+1.修改源码加密的密钥，
+
+2.限制端口访问，让一般的扫描器扫不出来，
+这里我们用nginx做反向代理，通过ua过滤流量，然后防火墙限制端口只能让127.0.0.1访问shellcode端口
+
+先到我们的服务器上安装nginx服务
+找到nginx安装路径
+whereis nginx
+
+打开配置编辑nginx配置文件
+
+一般在安装路径的config
+
+vim /usr/local/nginx/conf/nginx.conf //具体看个人的nginx安装位置
+在http中的server中配置中添加
+        location ~*jquery {
+            if ( $http_user_agent != "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko")
+            {
+                return 404;
+            }
+            proxy_pass http://127.0.0.1:2095;
+        }
+
+配置中的ua根据你的profile文件中设置的ua所定
+
+
+profile中的ua也可以自行修改
+
+设置防火墙只能让127.0.0.1访问监听端口
+
+
+
 
 
 
