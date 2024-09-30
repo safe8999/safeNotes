@@ -39,6 +39,7 @@ Cobalt Strike将会记住这个SHA256哈希值,以便将来连接.可以通过Co
 ## 隐藏特征码(免杀手法之内)
 ##### 开启禁Ping动作  
 `vim /etc/sysctl.con`
+`123`
 
 
 ##### 修改Cobalt Strike默认端口
