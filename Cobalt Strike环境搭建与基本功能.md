@@ -53,15 +53,13 @@ Cobalt Strike默认证书中含有与cs相关的特征，已经被waf厂商标�
 
 删除服务端Server目录下的cobaltstrike.store文件  
 利用keytool生成新的一个无特征的证书文件cobaltstrike.store  
-`keytool -keystore cobaltstrike.store -storepass 123456 -keypass 123456 -genkey -keyalg RSA -alias 360.com -dname "CN=Microsoft Windows, OU=MOPR, O=Microsoft Corporation, L=Redmond, ST=Washington, C=US"`
-
-可自由替换内容：  
-        -keystore 生成的store名  
-        -storepass 指定更改密钥库的储存口令  
-        -keypass 指定更改条目的密钥口令  
-        -genkey -keyalg RSA 指定算法  
-        -alias 自定义别名  
-        -dname 指定所有者信息  
+    `keytool -keystore cobaltstrike.store -storepass 123456 -keypass 123456 -genkey -keyalg RSA -alias 360.com -dname "CN=Microsoft Windows, OU=MOPR, O=Microsoft Corporation, L=Redmond, ST=Washington, C=US"` 
+    -keystore 生成的store名  
+    -storepass 指定更改密钥库的储存口令  
+    -keypass 指定更改条目的密钥口令  
+    -genkey -keyalg RSA 指定算法  
+    -alias 自定义别名  
+    -dname 指定所有者信息  
 
 查看cs证书文件内容：`keytool -list -v -keystore cobaltstrike.store`   
 
