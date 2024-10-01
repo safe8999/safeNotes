@@ -9,7 +9,7 @@ Cobalt Strike4.8
 如果TeamServer跟TeamServerImage不具备x执行权限，执行如下命令添加执行权限  
 `sudo chmod +x teamserver TeamServerImage`  
 启动服务端：  
-`sudo ./teamserver 192.168.80.146 cspasswd.9`  
+`sudo ./teamserver 192.168.163.172 cspasswd`  
 这里填本机ip地址跟密码,默认端口为50050  
 ![alt text](image-1.png)
 
