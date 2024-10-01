@@ -59,7 +59,7 @@ Cobalt Strike默认证书中含有与cs相关的特征，已经被waf厂商标�
 `sudo rm -rf cobaltstrike.store`   
 
 利用keytool生成新的一个无特征的证书文件cobaltstrike.store  
-    `keytool -keystore cobaltstrike.store -storepass 123456 -keypass 123456 -genkey -keyalg RSA -alias 360.com -dname "CN=Microsoft Windows, OU=MOPR, O=Microsoft Corporation, L=Redmond, ST=Washington, C=US"`
+    `keytool -keystore cobaltstrike.store -storepass 123456 -keypass 123456 -genkey -keyalg RSA -alias 360.com -dname "CN=Microsoft Windows, OU=MOPR, O=Microsoft Corporation, L=Redmond, ST=Washington, C=US"`  
     -keystore 生成的store名  
     -storepass 指定更改密钥库的储存口令  
     -keypass 指定更改条目的密钥口令  
@@ -71,12 +71,16 @@ Cobalt Strike默认证书中含有与cs相关的特征，已经被waf厂商标�
 查看cs证书文件内容：`sudo keytool -list -v -keystore cobaltstrike.store`    
 
 #### C2profile混淆流量:  
-修改Beacon与cs通信时候的流量特征，创建一个c2.profile文件(名字任意)   
-`sudo touch c2.profile` 
+Github上已经有非常多优秀的C2-Profile可以供我们使用了，我们需要使用Profile让Beacon和Teamserver之间的交互看起来尽可能像正常的流量  
 
+https://github.com/rsmudge/Malleable-C2-Profiles  
 https://github.com/threatexpress/malleable-c2    
 
-编辑c2.profile，把jquery-c2.4.8.profile的内容复制进来，可自由修改部分内容:   
+修改Beacon与cs通信时候的流量特征，创建一个c2.profile文件(名字任意)   
+`sudo touch c2.profile`  
+
+​这里我使用的是后者jquery的profile
+把jquery-c2.4.8.profile的内容复制进c2.profile，可自由修改部分内容:   
 `sudo vim c2.profile`    
 
 然后使用c2.profile方式启动teamserver   
