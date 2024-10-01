@@ -11,6 +11,7 @@ Cobalt Strike4.8
 启动服务端：  
 `sudo ./teamserver 192.168.80.146 cspasswd.9`  
 这里填本机ip地址跟密码,默认端口为50050  
+![alt text](image/server.png)
 
 ### 客户端  
 windows运行客户端，也需要有JDK环境  
@@ -122,6 +123,5 @@ nginx反向代理可以用来隐藏C2服务器，把cs监听端口给隐藏起�
         iptables -I INPUT -p TCP --dport 12095 -j DROP
         iptables -I INPUT -s 127.0.0.1 -p TCP --dport 12095 -j ACCEPT
         service iptables restart
-
 
 杀毒软件查杀方式：特征码、动态查杀、云查杀  
