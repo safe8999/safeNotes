@@ -112,13 +112,12 @@ nginx反向代理可以用来隐藏C2服务器，把cs监听端口给隐藏起�
 
 在http中的server中配置中添加   
 
-        location ~*jquery {
-            if ( $http_user_agent != "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko")
-            {
-                return 404;
-            }
-            proxy_pass http://127.0.0.1:12095;
-        }
+	location ~*jquery {
+        	if ( $http_user_agent != "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko"){
+            		return 404;
+        	}
+       		 proxy_pass http://127.0.0.1:12095;
+	}
 
 配置中的ua根据你的profile文件中设置的useragent所定，profile中的ua也可以自行修改  
 重启nginx: `sudo service nginx restart`
