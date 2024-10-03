@@ -39,7 +39,7 @@ Cobalt Strike将会记住这个SHA256哈希值,以便将来连接.可以通过Co
 
 
 ## 隐藏特征码-服务端(免杀手法之一)  
-开启禁Ping动作、修改CS默认端口、修改CS默认证书、C2profile混淆流量、nginx反向代理
+开启禁Ping动作、修改CS默认端口、修改CS默认证书、C2profile混淆流量、nginx反向代理、套cdn
 
 #### 开启禁Ping动作:  
         命令: sudo vim /etc/sysctl.conf
@@ -128,6 +128,11 @@ nginx反向代理可以用来隐藏C2服务器，把cs监听端口给隐藏起�
         iptables -I INPUT -p TCP --dport 12095 -j DROP
         iptables -I INPUT -s 127.0.0.1 -p TCP --dport 12095 -j ACCEPT
         service iptables restart
+
+#### 套cdn，对c2反连的隐藏，连接的时候发送到cdn里，cdn再发给母体，这样查不到母体ip地址  
+购买一个域名并配置cloudflare域名解析，记得要打开cdn模式，切勿暴露真实ip
+客户端连接服务端的时候使用域名
+
 
 杀毒软件查杀方式：特征码、动态查杀、云查杀  
 
