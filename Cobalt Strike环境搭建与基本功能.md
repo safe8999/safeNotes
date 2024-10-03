@@ -74,6 +74,7 @@ Cobalt Strike默认证书中含有与cs相关的特征，已经被waf厂商标�
 Github上已经有非常多优秀的C2-Profile可以供我们使用了，我们需要使用Profile让Beacon和Teamserver之间的交互看起来尽可能像正常的流量  
 
 https://github.com/rsmudge/Malleable-C2-Profiles  
+https://github.com/rsmudge/Malleable-C2-Profiles/blob/master/normal/amazon.profile  
 https://github.com/threatexpress/malleable-c2    
 
 修改Beacon与cs通信时候的流量特征，创建一个c2.profile文件(名字任意)   
