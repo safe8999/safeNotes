@@ -125,12 +125,16 @@ nginx反向代理可以用来隐藏C2服务器，把cs监听端口给隐藏起�
 
 设置防火墙只能让127.0.0.1访问监听端口  
 
+        iptables
         iptables -I INPUT -p TCP --dport 12095 -j DROP
         iptables -I INPUT -s 127.0.0.1 -p TCP --dport 12095 -j ACCEPT
         service iptables restart
+        
+        ufw
+        sudo ufw allow from 127.0.0.1 to any port 12095
 
 #### 套cdn，对c2反连的隐藏，连接的时候发送到cdn里，cdn再发给母体，这样查不到母体ip地址  
-购买一个域名并配置cloudflare域名解析，记得要打开cdn模式，切勿暴露真实ip
+购买一个域名并配置cloudflare域名解析，记得要打开cdn模式，切勿暴露真实ip  
 客户端连接服务端的时候使用域名
 
 
