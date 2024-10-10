@@ -1,3 +1,5 @@
+nmap  -A -O -p1-65535 IP --script=vuln
+
 #端口扫描：
 sudo nmap --min-rate 10000 -p- 192.10.10.21
 sudo nmap -sT --min-rate 10000 -p- ip -oA nmapscan/ports
