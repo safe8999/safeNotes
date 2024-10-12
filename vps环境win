@@ -1,4 +1,5 @@
-谷歌浏览器:https://www.google.com/intl/en_uk/chrome/browser-tools/
+Google: https://www.google.com/intl/en_uk/chrome/browser-tools/
+Firefox: https://www.firefox.com.cn/download/thanks/
 
 JDK21
 https://www.oracle.com/cn/java/technologies/downloads/#jdk21-windows
@@ -9,13 +10,15 @@ oracle登录密码:QQQqqq..33
 BP24.5.4Jar包
 https://portswigger.net/burp/releases
 
+BP破解
 BurpLoaderKeygen_v1.17:BP破解-->tg群:https://t.me/BurpLoaderKeygen
 java -jar BurpLoaderKeygen_v1.17.jar
 
-burp.bat脚本:修改jdk安装路径,bp破解脚本路径,以及bp安装路径
+burp.bat脚本:
+修改jdk安装路径,bp破解脚本路径,以及bp安装路径
 "C:\Program Files\Java\jdk-21\bin\java.exe" "--add-opens=java.desktop/javax.swing=ALL-UNNAMED" "--add-opens=java.base/java.lang=ALL-UNNAMED" "--add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED" "--add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED" "--add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED" "-javaagent:C:/Users/Administrator/Desktop/bp/BurpLoaderKeygen_v1.17.jar" "-noverify" "-jar" "C:\Users\Administrator\Desktop\bp\burpsuite_pro_v2024.5.4.jar" 
 
-burp.vbs文件:修改burp.bat文件路径
+burp.vbs脚本:修改burp.bat文件路径
 Set WshShell = CreateObject("WScript.Shell")
 WshShell.Run chr(34) & "C:\Users\Administrator\Desktop\bp\burp.bat" & Chr(34), 0
 Set WshShell = Nothing
@@ -26,37 +29,60 @@ Set WshShell = Nothing
 代理到本地127.0.0.1:8080 
 配置浏览器证书:访问:http://burp  
 
-
+验证码爆破插件：
 captcha-killer-modified验证码插件需要用到python,下载python:https://www.python.org/downloads/release/python-3119/
 python安装程序以管理员权限打开安装
-
 BP验证码插件captcha-killer:下载版本ckm-jdk11跟zip文件,把他们放在同一个文件夹里面
 https://github.com/f0ng/captcha-killer-modified/releases
 然后到安装目录执行ddddorc安装:
 pip install -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com ddddocr aiohttp
 需要安装VC++2019才能使用
 https://aka.ms/vs/16/release/VC_redist.x64.exe
-
 然后执行使用: python codereg.py
-
 bp导入这个ckm-jdk11插件使用
 
-Clash-verge:代理
-https://github.com/zzzgydi/clash-verge/releases
+# Clash-verge:代理
+# https://github.com/zzzgydi/clash-verge/releases
 
-Emeditor文本编辑器
+Emeditor:
 https://zh-cn.emeditor.com
 
-xshell+xftp免费版
+xshell+xftp
 https://www.xshell.com/zh/free-for-home-school/
 
-BP使用Turbo Intruder插件  拥抱十亿请求攻击
-https://www.secpulse.com/archives/126527.html
+# BP  Turbo Intruder插件
+#https://www.secpulse.com/archives/126527.html
+
+Yakit:
+https://github.com/yaklang/yakit
+
+URLFinder:
+https://github.com/pingc0y/URLFinder
+
+OWASP_ZAP:
+https://github.com/zaproxy/zaproxy
+
+御剑:
+https://github.com/foryujian/yjdirscan
+
+403bypass:
+https://github.com/sting8k/BurpSuite_403Bypasser
+https://github.com/Dheerajmadhukar/4-ZERO-3
+https://github.com/iamj0ker/bypass-403
+
+AWVS、哥斯拉、蚁剑、CS搭建
+
 
 浏览器插件
-Proxy SwitchyOmega
+simple-modify-headers
+HackBar V2
 Wappalyzer
+Show site IP
+Proxy SwitchyOmega\FoxyProxy
 Shodan
+X-Forwarded-For Header
+IPvFoo
+simple-modify-headers
 FindSomething
 Open Multiple URLs
 Link Gopher
