@@ -53,6 +53,7 @@ Cobalt Strike将会记住这个SHA256哈希值,以便将来连接.可以通过Co
         如果有防火墙记得开放规则: sudo ufw allow 19001
 
 #### 修改CS默认证书:    
+第一种方式：删除原有证书，生成新的证书  
 Cobalt Strike默认证书中含有与cs相关的特征，已经被waf厂商标记烂了，我们要重新生成一个新的证书，这里我们用JDK自带的keytool证书工具来生成新证书 
 
 删除服务端Server目录下的cobaltstrike.store文件:  
@@ -69,6 +70,13 @@ Cobalt Strike默认证书中含有与cs相关的特征，已经被waf厂商标�
 
 证书生成完毕后，查看一下是否是新的证书内容   
 查看cs证书文件内容：`sudo keytool -list -v -keystore cobaltstrike.store`    
+
+第二种方式：直接修改CS默认证书  
+创建证书:   
+`keytool -keystore keyname.store -storepass 123546 -keypass 123456 -genkey -keyalg RSA -alias test.tk -dname "CN=Microsoft Windows, OU=MOPR, O=Microsoft Corporation, L=Redmond, ST=Washington, C=US"`
+修改证书标准并应用:  
+`keytool -importkeystore -srckeystore keyname.store -destkeystore keyname.store -deststoretype pkcs12`               
+查看cs证书文件内容：`sudo keytool -list -v -keystore cobaltstrike.store`  
 
 #### C2profile混淆流量:  
 Github上已经有非常多优秀的C2-Profile可以供我们使用了，我们需要使用Profile让Beacon和Teamserver之间的交互看起来尽可能像正常的流量  
