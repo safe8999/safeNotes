@@ -53,9 +53,17 @@ Cobalt Strike将会记住这个SHA256哈希值,以便将来连接.可以通过Co
         如果有防火墙记得开放规则: sudo ufw allow 19001
 
 #### 修改CS默认证书:    
-第一种方式：删除原有证书，生成新的证书  
-Cobalt Strike默认证书中含有与cs相关的特征，已经被waf厂商标记烂了，我们要重新生成一个新的证书，这里我们用JDK自带的keytool证书工具来生成新证书 
+Cobalt Strike默认证书中含有与cs相关的特征，已经被waf厂商标记烂了，我们要重新生成一个新的证书，这里我们用JDK自带的keytool证书工具来生成新证书  
 
+keytool是一个Java数据证书的管理工具，参数如下：  
+    -keystore 生成的store名  
+    -storepass 指定更改密钥库的储存口令  
+    -keypass 指定更改条目的密钥口令  
+    -genkey -keyalg RSA 指定算法  
+    -alias 自定义别名  
+    -dname 指定所有者信息  
+
+第一种方式：删除原有证书，生成新的证书  
 删除服务端Server目录下的cobaltstrike.store文件:  
     `sudo rm -rf cobaltstrike.store`   
 利用keytool生成新的一个无特征的证书文件  
@@ -71,14 +79,6 @@ Cobalt Strike默认证书中含有与cs相关的特征，已经被waf厂商标�
 
 修改teamserver里面的证书文件名keyStore以及证书密码keyStorePassword的值,改成自己生成的！  
 
-参数解释：  
-    -keystore 生成的store名  
-    -storepass 指定更改密钥库的储存口令  
-    -keypass 指定更改条目的密钥口令  
-    -genkey -keyalg RSA 指定算法  
-    -alias 自定义别名  
-    -dname 指定所有者信息  
-
 #### C2profile混淆流量:  
 Github上已经有非常多优秀的C2-Profile可以供我们使用了，我们需要使用Profile让Beacon和Teamserver之间的交互看起来尽可能像正常的流量  
 
@@ -89,22 +89,20 @@ https://github.com/threatexpress/malleable-c2
 修改Beacon与cs通信时候的流量特征，创建一个c2.profile文件(名字任意)   
 `sudo touch c2.profile`  
 
-​这里我使用的是后者jquery的profile
-把jquery-c2.4.8.profile的内容复制进c2.profile，可自由修改部分内容:   
+​这里我使用的是后者jquery的profile  
+创建一个c2.profile文件(文件名任意)  
+把jquery-c2.4.8.profile的模板复制进c2.profile,(可自由修改部分内容,没有配置cdn可以不写keyStore跟password)   
 `sudo vim c2.profile`    
 
 然后使用c2.profile方式启动teamserver   
 `sudo ./teamserver 192.168.2.96 passwd332 c2.profile`   
 
-客户端开启CS的监听，触发木马   
-抓包，查看流量特征是否被混淆   
-发现请求改成了我们在c2.profile中编写的URL、UA等信息时，则修改成功。   
+验证：触发木马-抓包-查看流量特征,发现请求改成了我们在c2.profile中编写的URL、UA等信息时，则修改成功。   
 
 #### 部署nginx反向代理:   
-nginx反向代理可以用来隐藏C2服务器，把cs监听端口给隐藏起来了，要不然默认geturl就能获取到我们的shellcode，加密shellcode的密钥又是固定的(3.x 0x69，4.x 0x2e)，所以能从shellcode中解出c2域名等配置信息。  
+nginx反代用来隐藏C2服务器，把cs监听端口给隐藏起来了，要不然默认geturi就能获取到我们的shellcode，加密shellcode的密钥又是固定的(3.x 0x69，4.x 0x2e)，所以能从shellcode中解出c2域名等配置信息。  
 
-不修改这个特征的话nmap 一扫就出来  
-`nmap [ip][port] --script=grab_beacon_config.nse`  
+不修改这个特征的话nmap 一扫就出来:  `nmap [ip] -p [port] --script=grab_beacon_config.nse`  
 
 修改这个特征有两个方法:  
 1.修改源码加密的密钥  
@@ -141,9 +139,35 @@ nginx反向代理可以用来隐藏C2服务器，把cs监听端口给隐藏起�
         ufw
         sudo ufw allow from 127.0.0.1 to any port 12095
 
-#### 套cdn，对c2反连的隐藏，连接的时候发送到cdn里，cdn再发给母体，这样查不到母体ip地址  
+#### 配置cdn：对c2反连的隐藏，连接的时候发送到cdn里，cdn再发给母体，这样查不到母体ip地址  
+做了反代,识别不到cs，但是连接的ip仍然暴露，这时候就需要做cdn  
 购买一个域名并配置cloudflare域名解析，记得要打开cdn模式，切勿暴露真实ip  
-客户端连接服务端的时候使用域名
+
+生成img.xxx.com.store文件
+openssl pkcs12 -export -in /etc/letsencrypt/live/img.xxx.com/fullchain.pem -inkey /etc/letsencrypt/live/jimg.xxx.com/privkey.pem -out img.xxx.com.p12 -name img.xxx.com -passout pass:123456
+
+keytool -importkeystore -deststorepass 123456 -destkeypass 123456 -destkeystore img.xxx.com.store -srckeystore img.xxx.com.p12 -srcstoretype PKCS12 -srcstorepass 123456 -alias img.xxx.com
+
+将生成的img.xxx.com.store放到cs目录下，修改teamserver文件最后一行,将cobaltstrike.store修改为img.xxx.com.store和store文件对应的密码。（有必要的话，把端口号也可以改了并设置iptables只允许特定ip访问）
+
+java -XX:ParallelGCThreads=4 -Dcobaltstrike.server_port=40120 -Djavax.net.ssl.keyStore=./img.xxx.com.store -Djavax.net.ssl.keyStorePassword=123456 -server -XX:+AggressiveHeap -XX:+UseParallelGC -classpath ./cobaltstrike.jar server.TeamServer $*
+
+将keystore加入Malleable C2 profile中
+
+https-certificate {
+     set keystore “img.xxx.com.store”;
+     set password “123456”;
+}
+
+启动cs设置listener
+
+这里https port(bind):设置的8022（cs会把端口开在8022），在nginx配置文件中的将proxy_pass设置为：https://127.0.0.1:8022。
+
+开启listener之后设置iptables，只允许127.0.0.1访问。这下nmap也就扫不出来了。
+
+iptables -A INPUT -s 127.0.0.1 -p tcp --dport 8022 -j ACCEPT
+iptables -A INPUT -p tcp --dport 8022 -j DROP
+
 
 
 杀毒软件查杀方式：特征码、动态查杀、云查杀  
@@ -155,3 +179,6 @@ nginx反向代理可以用来隐藏C2服务器，把cs监听端口给隐藏起�
         3.Cobalt Strike服务器接受连接请求，并与恶意软件建立通信。
         4.攻击者可以通过Cobalt Strike控制台执行各种操作,如扫描目标网络、收集目标计算机信息、下载和上传文件等。
         5.Cobalt Strike还提供了内置的模块,如端口转发、代理服务器、漏洞利用等,可帮助攻击者更好地渗透目标网络。
+
+
+https://myzxcg.com/2020/12/Cobalt-Strike%E5%8E%BB%E7%89%B9%E5%BE%81%E9%85%8D%E7%BD%AENginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86CDN%E4%B8%8ECloudflare-Worker/#cloudflare-worker%E9%85%8D%E7%BD%AE
