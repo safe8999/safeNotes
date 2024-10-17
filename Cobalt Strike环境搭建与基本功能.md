@@ -137,9 +137,10 @@ nginx反代用来隐藏C2服务器，把cs监听端口给隐藏起来了，要�
 购买一个域名并配置cloudflare域名解析，记得要打开cdn模式，切勿暴露真实ip  
 
 一、生成p12证书文件   
-`openssl pkcs12 -export -in /opt/ssl/cf.pem -inkey /opt/ssl/cf.key -out spoofdomain.p12 -name 你自己的域名 -passout pass:自己设置一个密码123456`  
 
-`keytool -importkeystore -deststorepass 刚才设置的密码 -destkeypass 刚才设置的密码 -destkeystore cf.store -srckeystore spoofdomain.p12  -srcstoretype PKCS12 -srcstorepass 刚才设置的密码`  
+    openssl pkcs12 -export -in /opt/ssl/cf.pem -inkey /opt/ssl/cf.key -out spoofdomain.p12 -name 你自己的域名 -passout pass:自己设置一个密码123456
+
+    keytool -importkeystore -deststorepass 刚才设置的密码 -destkeypass 刚才设置的密码 -destkeystore cf.store -srckeystore spoofdomain.p12 -srcstoretype PKCS12 -srcstorepass 刚才设置的密码
 
 将生成的cf.store放到cs server目录下，修改teamserver文件最后一行,修改server_port、keyStore和keyStorePassword(证书名、证书密码、端口号不要用默认的)，例：cobaltstrike.store修改为cf.store     
 
@@ -149,14 +150,15 @@ nginx反代用来隐藏C2服务器，把cs监听端口给隐藏起来了，要�
 
 二、将keystore加入C2 profile中  
 参考：https://github.com/safe8999/safeNotes/files/c2.profile  
+
     https-certificate {
         set keystore "cf.store";
         set password "刚才设置的store密码";
     }  
  
 三、配置nginx代理转发  
-    server {
 
+    server {
             listen 443 ssl http2;
             ssl_certificate /opt/ssl/cf.pem;
             ssl_certificate_key /opt/ssl/cf.key;
