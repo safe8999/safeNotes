@@ -149,7 +149,9 @@ nginx反代用来隐藏C2服务器，把cs监听端口给隐藏起来了，要�
 
 
 二、将keystore加入C2 profile中  
-参考：https://github.com/safe8999/safeNotes/files/c2.profile  
+cs的http相关流量特征可以根据profile文件改变  
+以下提供相关配置profile，方便之后的配置使用，虽然github中有很多profile案例，但切记不能直接套用，现在的C2扫描器可以针对常用的几个profile直接扫描，建议自行设置一个复杂的url路径。以下的profile文件根据github上jQuery的profile做了少许修改  
+profile：https://github.com/safe8999/safeNotes/files/c2.profile  
 
     https-certificate {
         set keystore "cf.store";
