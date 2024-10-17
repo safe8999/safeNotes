@@ -70,14 +70,7 @@ keytool是一个Java数据证书的管理工具，参数如下：
     `keytool -keystore cobaltstrike.store -storepass 123456 -keypass 123456 -genkey -keyalg RSA -alias 360.com -dname "CN=Microsoft Windows, OU=MOPR, O=Microsoft Corporation, L=Redmond, ST=Washington, C=US"`  
 查看cs证书文件内容：`sudo keytool -list -v -keystore cobaltstrike.store`    
 
-第二种方式：直接修改CS默认证书  
-创建证书:   
-    `keytool -keystore keyname.store -storepass 123546 -keypass 123456 -genkey -keyalg RSA -alias test.tk -dname "CN=Microsoft Windows, OU=MOPR, O=Microsoft Corporation, L=Redmond, ST=Washington, C=US"`  
-修改证书标准并应用:  
-    `keytool -importkeystore -srckeystore keyname.store -destkeystore keyname.store -deststoretype pkcs12`  
-查看cs证书文件内容：`sudo keytool -list -v -keystore cobaltstrike.store`  
-
-修改teamserver里面的证书文件名keyStore以及证书密码keyStorePassword的值,改成自己生成的！  
+修改teamserver里面的证书文件名keyStore以及证书密码keyStorePassword的值,改成自己生成的！如果生成的是cobaltstrike.store跟123456就不需要改  
 
 #### C2profile混淆流量:  
 Github上已经有非常多优秀的C2-Profile可以供我们使用了，我们需要使用Profile让Beacon和Teamserver之间的交互看起来尽可能像正常的流量  
@@ -119,7 +112,7 @@ nginx反代用来隐藏C2服务器，把cs监听端口给隐藏起来了，要�
 
 在http中的server中配置中添加   
 
-	location ~*jquery {
+	location ~*/jquery {
         	if ( $http_user_agent != "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko"){
             		return 404;
         	}
@@ -139,38 +132,67 @@ nginx反代用来隐藏C2服务器，把cs监听端口给隐藏起来了，要�
         ufw
         sudo ufw allow from 127.0.0.1 to any port 12095
 
-#### 配置cdn：对c2反连的隐藏，连接的时候发送到cdn里，cdn再发给母体，这样查不到母体ip地址  
-做了反代,识别不到cs，但是连接的ip仍然暴露，这时候就需要做cdn  
+### 配置cdn：对c2反连的隐藏，连接的时候发送到cdn里，cdn再发给母体，这样查不到母体ip地址  
+做了反代,识别不到是cs，但是连接的ip仍然暴露，这时候就需要做cdn  
 购买一个域名并配置cloudflare域名解析，记得要打开cdn模式，切勿暴露真实ip  
 
-生成img.xxx.com.store文件
-openssl pkcs12 -export -in /etc/letsencrypt/live/img.xxx.com/fullchain.pem -inkey /etc/letsencrypt/live/jimg.xxx.com/privkey.pem -out img.xxx.com.p12 -name img.xxx.com -passout pass:123456
+一、生成p12证书文件   
+`openssl pkcs12 -export -in /opt/ssl/cf.pem -inkey /opt/ssl/cf.key -out spoofdomain.p12 -name 你自己的域名 -passout pass:自己设置一个密码123456`  
 
-keytool -importkeystore -deststorepass 123456 -destkeypass 123456 -destkeystore img.xxx.com.store -srckeystore img.xxx.com.p12 -srcstoretype PKCS12 -srcstorepass 123456 -alias img.xxx.com
+`keytool -importkeystore -deststorepass 刚才设置的密码 -destkeypass 刚才设置的密码 -destkeystore cf.store -srckeystore spoofdomain.p12  -srcstoretype PKCS12 -srcstorepass 刚才设置的密码`  
 
-将生成的img.xxx.com.store放到cs目录下，修改teamserver文件最后一行,将cobaltstrike.store修改为img.xxx.com.store和store文件对应的密码。（有必要的话，把端口号也可以改了并设置iptables只允许特定ip访问）
+将生成的cf.store放到cs server目录下，修改teamserver文件最后一行,修改server_port、keyStore和keyStorePassword(证书名、证书密码、端口号不要用默认的)，例：cobaltstrike.store修改为cf.store     
 
-java -XX:ParallelGCThreads=4 -Dcobaltstrike.server_port=40120 -Djavax.net.ssl.keyStore=./img.xxx.com.store -Djavax.net.ssl.keyStorePassword=123456 -server -XX:+AggressiveHeap -XX:+UseParallelGC -classpath ./cobaltstrike.jar server.TeamServer $*
-
-将keystore加入Malleable C2 profile中
-
-https-certificate {
-     set keystore “img.xxx.com.store”;
-     set password “123456”;
-}
-
-启动cs设置listener
-
-这里https port(bind):设置的8022（cs会把端口开在8022），在nginx配置文件中的将proxy_pass设置为：https://127.0.0.1:8022。
-
-开启listener之后设置iptables，只允许127.0.0.1访问。这下nmap也就扫不出来了。
-
-iptables -A INPUT -s 127.0.0.1 -p tcp --dport 8022 -j ACCEPT
-iptables -A INPUT -p tcp --dport 8022 -j DROP
+检查store有效性：`keytool -list -v -keystore cf.store`  
+看到cf相关证书即成功  
 
 
+二、将keystore加入C2 profile中  
+参考：https://github.com/safe8999/safeNotes/files/c2.profile  
+    https-certificate {
+        set keystore "cf.store";
+        set password "刚才设置的store密码";
+    }  
+ 
+三、配置nginx代理转发  
+    server {
 
-杀毒软件查杀方式：特征码、动态查杀、云查杀  
+            listen 443 ssl http2;
+            ssl_certificate /opt/ssl/cf.pem;
+            ssl_certificate_key /opt/ssl/cf.key;
+
+            # 下面写profile中的get的url路径
+            location ~*/jquery {
+                    if ( $http_user_agent != "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko"){
+                        return 404;
+                    }
+                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                    proxy_pass http://127.0.0.1:19000;
+            }
+
+
+            # 下面写profile中的post的url路径
+            location ~*/post {
+                    #start with jquery
+                    #下面写上profile中配置的ua
+                    if ($http_user_agent != "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko") {
+                        return 302;
+                    }
+                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                    proxy_pass http://127.0.0.1:19000;
+            }
+
+            #重定向其他所有请求，防止扫描器扫描
+            location / {
+                proxy_pass  https://www.google.com/;
+            }
+    }
+
+重启nginx，这一步中，我们使用nginx将443的端口流量转发到了19000端口，也就是说cs后面实际上要监听的端口就是19000端口  
+
+运用iptables配置防火墙，限制cs监听端口只能被本机访问，注意对外决不能暴露真实监听端口：  
+    iptables -A INPUT -s 127.0.0.1 -p tcp --dport 18088 -j ACCEPT
+    iptables -A INPUT -p tcp --dport 8022 -j DROP  
 
 
 ### Cobalt Strike工作原理   
@@ -180,5 +202,4 @@ iptables -A INPUT -p tcp --dport 8022 -j DROP
         4.攻击者可以通过Cobalt Strike控制台执行各种操作,如扫描目标网络、收集目标计算机信息、下载和上传文件等。
         5.Cobalt Strike还提供了内置的模块,如端口转发、代理服务器、漏洞利用等,可帮助攻击者更好地渗透目标网络。
 
-
-https://myzxcg.com/2020/12/Cobalt-Strike%E5%8E%BB%E7%89%B9%E5%BE%81%E9%85%8D%E7%BD%AENginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86CDN%E4%B8%8ECloudflare-Worker/#cloudflare-worker%E9%85%8D%E7%BD%AE
+杀毒软件查杀方式：特征码、动态查杀、云查杀 
