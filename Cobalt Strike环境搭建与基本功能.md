@@ -193,8 +193,14 @@ nginx反代用来隐藏C2服务器，把cs监听端口给隐藏起来了，要�
 重启nginx，这一步中，我们使用nginx将443的端口流量转发到了19000端口，也就是说cs后面实际上要监听的端口就是19000端口  
 
 运用iptables配置防火墙，限制cs监听端口只能被本机访问，注意对外决不能暴露真实监听端口：  
+
+    iptables:
     iptables -A INPUT -s 127.0.0.1 -p tcp --dport 18088 -j ACCEPT
-    iptables -A INPUT -p tcp --dport 8022 -j DROP  
+    iptables -A INPUT -p tcp --dport 8022 -j DROP
+    service iptables restart
+
+    ufw
+    sudo ufw allow from 127.0.0.1 to any port 12095
 
 
 ### Cobalt Strike工作原理   
