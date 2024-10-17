@@ -41,18 +41,18 @@ Cobalt Strike将会记住这个SHA256哈希值,以便将来连接.可以通过Co
 ## 隐藏特征码-服务端(免杀手法之一)  
 开启禁Ping动作、修改CS默认端口、修改CS默认证书、C2profile混淆流量、nginx反向代理、套cdn
 
-#### 开启禁Ping动作:  
+### 开启禁Ping动作:  
         命令: sudo vim /etc/sysctl.conf
         添加一行: net.ipv4.icmp_echo_ignore_all = 1
         刷新配置: sudo sysctl -p
 
-#### 修改CS默认端口:  
+### 修改CS默认端口:  
         cd到cs服务端: cd CobaltStrike4.8/Server
         编辑teamserver文件: vim teamserver
         修改port=50050为其他端口
         如果有防火墙记得开放规则: sudo ufw allow 19001
 
-#### 修改CS默认证书:    
+### 修改CS默认证书:    
 Cobalt Strike默认证书中含有与cs相关的特征，已经被waf厂商标记烂了，我们要重新生成一个新的证书，这里我们用JDK自带的keytool证书工具来生成新证书  
 
 keytool是一个Java数据证书的管理工具，参数如下：  
@@ -72,7 +72,7 @@ keytool是一个Java数据证书的管理工具，参数如下：
 
 修改teamserver里面的证书文件名keyStore以及证书密码keyStorePassword的值,改成自己生成的！如果生成的是cobaltstrike.store跟123456就不需要改  
 
-#### C2profile混淆流量:  
+### C2profile混淆流量:  
 Github上已经有非常多优秀的C2-Profile可以供我们使用了，我们需要使用Profile让Beacon和Teamserver之间的交互看起来尽可能像正常的流量  
 
 https://github.com/rsmudge/Malleable-C2-Profiles  
@@ -92,7 +92,7 @@ https://github.com/threatexpress/malleable-c2
 
 验证：触发木马-抓包-查看流量特征,发现请求改成了我们在c2.profile中编写的URL、UA等信息时，则修改成功。   
 
-#### 部署nginx反向代理:   
+### 部署nginx反向代理:   
 nginx反代用来隐藏C2服务器，把cs监听端口给隐藏起来了，要不然默认geturi就能获取到我们的shellcode，加密shellcode的密钥又是固定的(3.x 0x69，4.x 0x2e)，所以能从shellcode中解出c2域名等配置信息。  
 
 不修改这个特征的话nmap 一扫就出来:  `nmap [ip] -p [port] --script=grab_beacon_config.nse`  
@@ -132,6 +132,7 @@ nginx反代用来隐藏C2服务器，把cs监听端口给隐藏起来了，要�
         ufw
         sudo ufw allow from 127.0.0.1 to any port 12095
 
+
 ### 配置cdn：对c2反连的隐藏，连接的时候发送到cdn里，cdn再发给母体，这样查不到母体ip地址  
 做了反代,识别不到是cs，但是连接的ip仍然暴露，这时候就需要做cdn  
 购买一个域名并配置cloudflare域名解析，记得要打开cdn模式，切勿暴露真实ip  
@@ -149,7 +150,7 @@ nginx反代用来隐藏C2服务器，把cs监听端口给隐藏起来了，要�
 
 
 二、将keystore加入C2 profile中  
-cs的http相关流量特征可以根据profile文件改变  
+cs的http相关流量特征可以根据profile文件改变。  
 以下提供相关配置profile，方便之后的配置使用，虽然github中有很多profile案例，但切记不能直接套用，现在的C2扫描器可以针对常用的几个profile直接扫描，建议自行设置一个复杂的url路径。以下的profile文件根据github上jQuery的profile做了少许修改  
 profile：https://github.com/safe8999/safeNotes/files/c2.profile  
 
@@ -192,7 +193,8 @@ profile：https://github.com/safe8999/safeNotes/files/c2.profile
             }
     }
 
-重启nginx，这一步中，我们使用nginx将443的端口流量转发到了19000端口，也就是说cs后面实际上要监听的端口就是19000端口  
+这一步中，我们使用nginx将443的端口流量转发到了19000端口，也就是说cs后面实际上要监听的端口就是19000端口  
+重启nginx：`systemctl restart nginx`  
 
 运用iptables配置防火墙，限制cs监听端口只能被本机访问，注意对外决不能暴露真实监听端口：  
 
