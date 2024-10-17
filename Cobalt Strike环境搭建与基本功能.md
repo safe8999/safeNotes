@@ -1,6 +1,9 @@
-Cobalt Strike基于Java环境开发，所以一定要安装Java环境。（工具的组成为服务端 + 客户端）
+Cobalt Strike4.8  
 
-Cobalt Strike4.8
+## Cobalt Strike简介：  
+Cobalt Strike是一款由java编写的全平台多方协同渗透测试框架，在3.0版本之前它基于Metasploit框架工作，在3.0后的版本以独立成一个渗透测试平台。CobaltStrike集成了端口转发、端口扫描、socket代理、提权、钓鱼、远控木马等功能。该工具几乎覆盖了APT攻击链中所需要用到的各个技术环节，且其最大的优点在于可以进行团队合作和优越的UI界面。Strike基于Java环境开发，所以一定要安装Java环境。（工具的组成为服务端 + 客户端）
+
+## 一、Cobalt Strike部署
 
 ### 服务端  
 启动Cobalt Strike需要JDK的支持，需要安装Java环境，如果服务端是kali，默认安装了java环境  
@@ -38,21 +41,22 @@ Cobalt Strike将询问你是否识别此团队服务器的SHA256哈希,指纹校
 Cobalt Strike将会记住这个SHA256哈希值,以便将来连接.可以通过Cobalt Strike -> Preferences -> Fingerprints 来管理这些哈希值。  
 
 
-## 隐藏特征码-服务端(免杀手法之一)  
+
+## 二、隐藏特征码-服务端(免杀手法之一)  
 开启禁Ping动作、修改CS默认端口、修改CS默认证书、C2profile混淆流量、nginx反向代理、套cdn
 
-### 开启禁Ping动作:  
+### 1、开启禁Ping动作:  
         命令: sudo vim /etc/sysctl.conf
         添加一行: net.ipv4.icmp_echo_ignore_all = 1
         刷新配置: sudo sysctl -p
 
-### 修改CS默认端口:  
+### 2、修改CS默认端口:  
         cd到cs服务端: cd CobaltStrike4.8/Server
         编辑teamserver文件: vim teamserver
         修改port=50050为其他端口
         如果有防火墙记得开放规则: sudo ufw allow 19001
 
-### 修改CS默认证书:    
+### 3、修改CS默认证书:    
 Cobalt Strike默认证书中含有与cs相关的特征，已经被waf厂商标记烂了，我们要重新生成一个新的证书，这里我们用JDK自带的keytool证书工具来生成新证书  
 
 keytool是一个Java数据证书的管理工具，参数如下：  
@@ -63,7 +67,7 @@ keytool是一个Java数据证书的管理工具，参数如下：
     -alias 自定义别名  
     -dname 指定所有者信息  
 
-第一种方式：删除原有证书，生成新的证书  
+删除原有证书，生成新的证书  
 删除服务端Server目录下的cobaltstrike.store文件:  
     `sudo rm -rf cobaltstrike.store`   
 利用keytool生成新的一个无特征的证书文件  
@@ -72,7 +76,7 @@ keytool是一个Java数据证书的管理工具，参数如下：
 
 修改teamserver里面的证书文件名keyStore以及证书密码keyStorePassword的值,改成自己生成的！如果生成的是cobaltstrike.store跟123456就不需要改  
 
-### C2profile混淆流量:  
+### 4、C2profile混淆流量:  
 Github上已经有非常多优秀的C2-Profile可以供我们使用了，我们需要使用Profile让Beacon和Teamserver之间的交互看起来尽可能像正常的流量  
 
 https://github.com/rsmudge/Malleable-C2-Profiles  
@@ -92,7 +96,7 @@ https://github.com/threatexpress/malleable-c2
 
 验证：触发木马-抓包-查看流量特征,发现请求改成了我们在c2.profile中编写的URL、UA等信息时，则修改成功。   
 
-### 部署nginx反向代理:   
+### 5、部署nginx反向代理:   
 nginx反代用来隐藏C2服务器，把cs监听端口给隐藏起来了，要不然默认geturi就能获取到我们的shellcode，加密shellcode的密钥又是固定的(3.x 0x69，4.x 0x2e)，所以能从shellcode中解出c2域名等配置信息。  
 
 不修改这个特征的话nmap 一扫就出来:  `nmap [ip] -p [port] --script=grab_beacon_config.nse`  
@@ -133,11 +137,11 @@ nginx反代用来隐藏C2服务器，把cs监听端口给隐藏起来了，要�
         sudo ufw allow from 127.0.0.1 to any port 12095
 
 
-### 配置cdn：对c2反连的隐藏，连接的时候发送到cdn里，cdn再发给母体，这样查不到母体ip地址  
+### 6、配置cdn：对c2反连的隐藏，连接的时候发送到cdn里，cdn再发给母体，这样查不到母体ip地址  
 做了反代,识别不到是cs，但是连接的ip仍然暴露，这时候就需要做cdn  
 购买一个域名并配置cloudflare域名解析，记得要打开cdn模式，切勿暴露真实ip  
 
-一、生成p12证书文件   
+1）、生成p12证书文件   
 
     openssl pkcs12 -export -in /opt/ssl/cf.pem -inkey /opt/ssl/cf.key -out spoofdomain.p12 -name 你自己的域名 -passout pass:自己设置一个密码123456
 
@@ -149,7 +153,8 @@ nginx反代用来隐藏C2服务器，把cs监听端口给隐藏起来了，要�
 看到cf相关证书即成功  
 
 
-二、将keystore加入C2 profile中  
+2）、将keystore加入C2profile中(C2profile混淆流量)  
+
 cs的http相关流量特征可以根据profile文件改变。  
 以下提供相关配置profile，方便之后的配置使用，虽然github中有很多profile案例，但切记不能直接套用，现在的C2扫描器可以针对常用的几个profile直接扫描，建议自行设置一个复杂的url路径。以下的profile文件根据github上jQuery的profile做了少许修改  
 profile：https://github.com/safe8999/safeNotes/files/c2.profile  
@@ -159,7 +164,7 @@ profile：https://github.com/safe8999/safeNotes/files/c2.profile
         set password "刚才设置的store密码";
     }  
  
-三、配置nginx代理转发  
+3）、配置nginx代理转发  
 
     server {
             listen 443 ssl http2;
@@ -196,7 +201,7 @@ profile：https://github.com/safe8999/safeNotes/files/c2.profile
 这一步中，我们使用nginx将443的端口流量转发到了19000端口，也就是说cs后面实际上要监听的端口就是19000端口  
 重启nginx：`systemctl restart nginx`  
 
-运用iptables配置防火墙，限制cs监听端口只能被本机访问，注意对外决不能暴露真实监听端口：  
+4）、运用iptables配置防火墙，限制cs监听端口只能被本机访问，注意对外决不能暴露真实监听端口：  
 
     iptables:
     iptables -A INPUT -s 127.0.0.1 -p tcp --dport 19000 -j ACCEPT
@@ -207,11 +212,18 @@ profile：https://github.com/safe8999/safeNotes/files/c2.profile
     sudo ufw allow from 127.0.0.1 to any port 19000
 
 
-### Cobalt Strike工作原理   
+## 三、Cobalt Strike工作原理   
+    杀毒软件查杀方式：特征码、静态查杀、动态查杀、云查杀  
         1.攻击者通过Cobalt Strike生成恶意软件,并将其上传到受害者计算机上。
         2.恶意软件会在受害者计算机上运行,并向Cobalt Strike服务器发送连接请求。
         3.Cobalt Strike服务器接受连接请求，并与恶意软件建立通信。
         4.攻击者可以通过Cobalt Strike控制台执行各种操作,如扫描目标网络、收集目标计算机信息、下载和上传文件等。
         5.Cobalt Strike还提供了内置的模块,如端口转发、代理服务器、漏洞利用等,可帮助攻击者更好地渗透目标网络。
 
-杀毒软件查杀方式：特征码、动态查杀、云查杀 
+
+## 四、Cobalt Strike 功能详解、基本使用
+
+https://www.cnblogs.com/sfsec/p/15302595.html
+
+
+## 五、免杀
