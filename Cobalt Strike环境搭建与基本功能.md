@@ -168,6 +168,7 @@ profile：https://github.com/safe8999/safeNotes/files/c2.profile
 
     server {
             listen 443 ssl http2;
+            server_name abc123.com; # 你的域名
             ssl_certificate /opt/ssl/cf.pem;
             ssl_certificate_key /opt/ssl/cf.key;
 
