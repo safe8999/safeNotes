@@ -120,7 +120,8 @@ nginx反代用来隐藏C2服务器，把cs监听端口给隐藏起来了，要�
         	if ( $http_user_agent != "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko"){
             		return 404;
         	}
-       		 proxy_pass http://127.0.0.1:12095;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+       		proxy_pass http://127.0.0.1:12095;
 	}
 
 配置中的ua根据你的profile文件中设置的useragent所定，profile中的ua也可以自行修改  
@@ -157,14 +158,14 @@ nginx反代用来隐藏C2服务器，把cs监听端口给隐藏起来了，要�
 
 cs的http相关流量特征可以根据profile文件改变。  
 以下提供相关配置profile，方便之后的配置使用，虽然github中有很多profile案例，但切记不能直接套用，现在的C2扫描器可以针对常用的几个profile直接扫描，建议自行设置一个复杂的url路径。以下的profile文件根据github上jQuery的profile做了少许修改  
-profile：https://github.com/safe8999/safeNotes/files/c2.profile  
+profile：https://github.com/safe8999/safeNotes/CS/c2.profile  
 
     https-certificate {
         set keystore "cf.store";
         set password "刚才设置的store密码";
     }  
  
-3）、配置nginx代理转发  
+3）、配置nginx代理转发: `vim /etc/nginx/sites-available/default`  
 
     server {
             listen 443 ssl http2;
@@ -193,7 +194,7 @@ profile：https://github.com/safe8999/safeNotes/files/c2.profile
                     proxy_pass http://127.0.0.1:19000;
             }
 
-            #重定向其他所有请求，防止扫描器扫描
+            # 重定向其他所有请求，防止扫描器扫描
             location / {
                 proxy_pass  https://www.google.com/;
             }
@@ -227,4 +228,27 @@ profile：https://github.com/safe8999/safeNotes/files/c2.profile
 https://www.cnblogs.com/sfsec/p/15302595.html
 
 
-## 五、免杀
+## 五、插件
+
+    CS4.x汉化插件
+    https://github.com/2217936322/
+
+    巨龙拉冬、LSTR、欧拉、梼杌、谢公子
+
+    Ladon
+    https://github.com/k8gege/Ladon 解压密码：k8gege.org
+
+    LSTR
+    https://github.com/lintstar/LSTAR 解压密码：LSTAR
+
+    OLa
+    https://github.com/d3ckx1/OLa/releases/
+
+    taowu
+    https://github.com/pandasec888/taowu-cobalt_strike
+
+    EventLogMaster
+    https://github.com/QAX-A-Team/EventLogMaster
+
+    一位博主整理的CS插件、工具，此站点内包含其他类型主流工具
+    https://oss.ywhack.com/%E5%90%8E%E6%B8%97%E9%80%8F/CobaltStrike 
