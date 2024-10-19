@@ -190,7 +190,8 @@ http-get {
     client {
 
         header "Accept" "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
-        header "Referer" "http://code.jquery.com/";
+        header "Host" "code.jquery.com"; # 你的域名,没配置cdn的时候注释掉
+        header "Referer" "http://www.google.com/";
         header "Accept-Encoding" "gzip, deflate";
 
         metadata {
@@ -227,8 +228,8 @@ http-post {
     client {
 
         header "Accept" "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
-        #header "Host" "code.jquery.com";
-        header "Referer" "http://code.jquery.com/";
+        header "Host" "code.jquery.com"; # 你的域名,没配置cdn的时候注释掉
+        header "Referer" "http://www.google.com/";
         header "Accept-Encoding" "gzip, deflate";
        
         id {
