@@ -121,7 +121,7 @@ nginx反代用来隐藏C2服务器，把cs监听端口给隐藏起来了，要�
             		return 404;
         	}
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-       		proxy_pass http://127.0.0.1:12095;
+            proxy_pass http://127.0.0.1:12095;
 	}
 
 配置中的ua根据你的profile文件中设置的useragent所定，profile中的ua也可以自行修改  
@@ -139,8 +139,8 @@ nginx反代用来隐藏C2服务器，把cs监听端口给隐藏起来了，要�
 
 
 ### 6、配置cdn：对c2反连的隐藏，连接的时候发送到cdn里，cdn再发给母体，这样查不到母体ip地址  
-做了反代,识别不到是cs，但是连接的ip仍然暴露，这时候就需要做cdn  
-购买一个域名并配置cloudflare域名解析，记得要打开cdn模式，切勿暴露真实ip  
+做了反代,识别不到是cs，但是连接的ip仍然暴露，这时候就需要做cdn，隐藏自己真实ip    
+购买一个域名，解析到cloudflare的dns，打开cdn模式，创建证书，禁用缓存
 
 1）、生成p12证书文件   
 
@@ -177,23 +177,23 @@ profile：https://github.com/safe8999/safeNotes/CS/c2.profile
 
             # 下面写profile中的get的url路径
             location ~*/jquery {
-                    if ( $http_user_agent != "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko"){
-                        return 404;
-                    }
-                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                    proxy_pass http://127.0.0.1:19000;
+                # 下面写上profile中配置的ua
+                if ( $http_user_agent != "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko"){
+                    return 404;
+                }
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_pass http://127.0.0.1:19000;
             }
 
 
             # 下面写profile中的post的url路径
             location ~*/post {
-                    #start with jquery
-                    #下面写上profile中配置的ua
-                    if ($http_user_agent != "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko") {
-                        return 302;
-                    }
-                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                    proxy_pass http://127.0.0.1:19000;
+                # 下面写上profile中配置的ua
+                if ($http_user_agent != "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko") {
+                    return 302;
+                }
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_pass http://127.0.0.1:19000;
             }
 
             # 重定向其他所有请求，防止扫描器扫描
