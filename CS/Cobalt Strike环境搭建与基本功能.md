@@ -156,7 +156,7 @@ nginx反代用来隐藏C2服务器，把cs监听端口给隐藏起来了，要�
 
 2）、将keystore加入C2profile中(C2profile混淆流量)  
 
-cs的http相关流量特征可以根据profile文件改变。  
+cs的http相关流量特征可以根据profile文件改变。
 以下提供相关配置profile，方便之后的配置使用，虽然github中有很多profile案例，但切记不能直接套用，现在的C2扫描器可以针对常用的几个profile直接扫描，建议自行设置一个复杂的url路径。以下的profile文件根据github上jQuery的profile做了少许修改  
 profile：https://github.com/safe8999/safeNotes/CS/c2.profile  
 
@@ -164,6 +164,8 @@ profile：https://github.com/safe8999/safeNotes/CS/c2.profile
         set keystore "cf.store";
         set password "刚才设置的store密码";
     }  
+
+    修改对应HOST、Referer、其他地方自定义  
  
 3）、配置nginx代理转发: `vim /etc/nginx/sites-available/default`  
 
@@ -202,6 +204,12 @@ profile：https://github.com/safe8999/safeNotes/CS/c2.profile
 
 这一步中，我们使用nginx将443的端口流量转发到了19000端口，也就是说cs后面实际上要监听的端口就是19000端口  
 重启nginx：`systemctl restart nginx`  
+调试ng、证书配置是否生效: `curl -v https://域名/jquery -H "Host: 域名" -k`  
+查看nginx日志:  
+    `tail -f /var/log/nginx/access.log`  
+    `tail -f /var/log/nginx/error.log`
+
+
 
 4）、运用iptables配置防火墙，限制cs监听端口只能被本机访问，注意对外决不能暴露真实监听端口：  
 
