@@ -14,14 +14,14 @@ Cobalt Strike是一款由java编写的全平台多方协同渗透测试框架，
 启动服务端：  
 `sudo ./teamserver 192.168.163.172 cspasswd`  
 这里填本机ip地址跟密码,默认端口为50050  
-![alt text](image/server.png)
+![alt text](../image/server.png)
 
 ### 客户端  
 windows运行客户端，也需要有JDK环境  
 运行cobaltstrike-client.cmd文件  
 输入对应服务端上设置的Host Port User Password  
 
-![alt text](image/image-1.png)  
+![alt text](../image/image-1.png)  
 Alias：输入主机别名或使用默认值，不能为空或以*开头。  
 Host：指定团队服务器的IP地址，不能为空  
 Port：服务器的端口（默认为50050）  
@@ -32,9 +32,9 @@ Password：连接到服务器的密码
 Cobalt Strike将询问你是否识别此团队服务器的SHA256哈希,指纹校验的主要作用是防篡改  
 点击是,连接登录到服务端并打开客户端用户界面   
 
-![alt text](image/image-2.png)  
+![alt text](../image/image-2.png)  
 
-![alt text](image/image-4.png)  
+![alt text](../image/image-4.png)  
 
 如果连接不上，查看服务端防火墙是否开启默认端口或者指定的端口  
 
