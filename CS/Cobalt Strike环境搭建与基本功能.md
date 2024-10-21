@@ -177,28 +177,28 @@ profile：https://github.com/safe8999/safeNotes/CS/c2.profile
 
             # 下面写profile中的get的url路径
             location ~*/jquery {
-                # 下面写上profile中配置的ua
-                if ( $http_user_agent != "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko"){
-                    return 404;
-                }
-                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                proxy_pass http://127.0.0.1:19000;
+                    # 下面写上profile中配置的ua
+                    if ( $http_user_agent != "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko"){
+                        return 404;
+                    }
+                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                    proxy_pass http://127.0.0.1:19000;
             }
 
 
             # 下面写profile中的post的url路径
             location ~*/post {
-                # 下面写上profile中配置的ua
-                if ($http_user_agent != "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko") {
-                    return 302;
-                }
-                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                proxy_pass http://127.0.0.1:19000;
+                    # 下面写上profile中配置的ua
+                    if ($http_user_agent != "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko") {
+                        return 302;
+                    }
+                    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                    proxy_pass http://127.0.0.1:19000;
             }
 
             # 重定向其他所有请求，防止扫描器扫描
             location / {
-                proxy_pass  https://www.google.com/;
+                    proxy_pass  https://www.google.com/;
             }
     }
 
