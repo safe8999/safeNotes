@@ -140,9 +140,20 @@ nginx反代用来隐藏C2服务器，把cs监听端口给隐藏起来了，要�
 
 ### 6、配置cdn：对c2反连的隐藏，连接的时候发送到cdn里，cdn再发给母体，这样查不到母体ip地址  
 做了反代,识别不到是cs，但是连接的ip仍然暴露，这时候就需要做cdn，隐藏自己真实ip    
-购买一个域名，解析到cloudflare的dns，打开cdn模式，创建证书，禁用缓存
+1）、购买一个域名，解析到cloudflare的dns，打开cdn模式，创建证书，禁用缓存
 
-1）、生成p12证书文件   
+    任意平台注册一个域名
+    使用cloudflare的cdn
+    网站-加入域名-选择免费
+    DNS-记录-原域名商dns解析到此dns
+    DNS-记录-添加记录到主机IP
+    SSL-概述-SSL/TLS加密-完全
+    SSL-边缘证书-始终使用 HTTPS
+    SSL-源服务器-创建源证书(cf.pem cf.key)
+    缓存-配置-开发模式开启
+    规则-页面规则-创建URL缓存级别绕过
+
+2）、生成p12证书文件   
 
     openssl pkcs12 -export -in /opt/ssl/cf.pem -inkey /opt/ssl/cf.key -out spoofdomain.p12 -name 你自己的域名 -passout pass:自己设置一个密码123456
 
@@ -154,7 +165,7 @@ nginx反代用来隐藏C2服务器，把cs监听端口给隐藏起来了，要�
 看到cf相关证书即成功  
 
 
-2）、将keystore加入C2profile中(C2profile混淆流量)  
+3）、将keystore加入C2profile中(C2profile混淆流量)  
 
 cs的http相关流量特征可以根据profile文件改变。
 以下提供相关配置profile，方便之后的配置使用，虽然github中有很多profile案例，但切记不能直接套用，现在的C2扫描器可以针对常用的几个profile直接扫描，建议自行设置一个复杂的url路径。以下的profile文件根据github上jQuery的profile做了少许修改  
@@ -165,9 +176,9 @@ profile：https://github.com/safe8999/safeNotes/CS/c2.profile
         set password "刚才设置的store密码";
     }  
 
-    修改对应HOST、Referer、其他地方自定义  
+    修改对应HOST、Referer，其他地方自定义  
  
-3）、配置nginx代理转发: `vim /etc/nginx/sites-available/default`  
+4）、配置nginx代理转发: `vim /etc/nginx/sites-available/default`  
 
     server {
             listen 443 ssl http2;
@@ -182,7 +193,7 @@ profile：https://github.com/safe8999/safeNotes/CS/c2.profile
                         return 404;
                     }
                     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                    proxy_pass http://127.0.0.1:19000;
+                    proxy_pass https://127.0.0.1:19000;
             }
 
 
@@ -193,7 +204,7 @@ profile：https://github.com/safe8999/safeNotes/CS/c2.profile
                         return 302;
                     }
                     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                    proxy_pass http://127.0.0.1:19000;
+                    proxy_pass https://127.0.0.1:19000;
             }
 
             # 重定向其他所有请求，防止扫描器扫描
@@ -204,14 +215,17 @@ profile：https://github.com/safe8999/safeNotes/CS/c2.profile
 
 这一步中，我们使用nginx将443的端口流量转发到了19000端口，也就是说cs后面实际上要监听的端口就是19000端口  
 重启nginx：`systemctl restart nginx`  
-调试ng、证书配置是否生效: `curl -v https://域名/jquery -H "Host: 域名" -k`  
+调试ng、域名证书配置是否生效:  
+    `curl -v https://域名/jquery -H "Host: 域名" -k`  
+    `curl -I -k -A "Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko" --http1.1 https://127.0.0.1:443/jquery-3.3.2.slim.min.js`  
 查看nginx日志:  
     `tail -f /var/log/nginx/access.log`  
     `tail -f /var/log/nginx/error.log`
 
+使用c2.profile方式启动teamserver：    
+    `sudo ./teamserver ip passwd888 c2.profile`   
 
-
-4）、运用iptables配置防火墙，限制cs监听端口只能被本机访问，注意对外决不能暴露真实监听端口：  
+5）、运用iptables配置防火墙，限制cs监听端口只能被本机访问，注意对外决不能暴露真实监听端口：  
 
     iptables:
     iptables -A INPUT -s 127.0.0.1 -p tcp --dport 19000 -j ACCEPT
