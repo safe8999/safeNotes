@@ -1,0 +1,96 @@
+CS4.8
+
+宿主机
+	搭建虚拟机-安装win10或win11镜像
+
+### Payload
+
+    1、HTA木马后门，Html Application，
+        1）、HTA分为三种：Executable、PowerShell、VBA
+        2）、Payload—Html Application—选择监听—后门方式PowerShell—生成，到目标机执行，CS上线
+
+    2、EXE后门：
+        WIndows Stagere Payload
+        WIndows Stageless Payload
+        1）、Payload—WIndows Stagere Payload—选择监听—选择 Windows EXE 模式生成，到目标机执行，CS上线
+        2）、可以选择Windows DLL、PowerShell的payload
+            Payload—WIndows Stagere Payload—选择监听—选择 Windows DLL 模式生成，到目标机执行，CS上线
+
+    3、生成各种语言版本的payload：
+        Stager Payload Generator
+        Stageless Payload Generator
+    C、C#、COM Scriptlet、Java、Perl、PowerShell、PowerShell Command、Python、Raw、Ruby、Veil、VBA
+        1）、Stager Payload Generator
+                Payload—Stager Payload Generator—选择监听—选择后门语言—生成payload
+        2）、Stageless Payload Generator
+                Payload—Stageless Payload Generator—选择监听—选择后门语言—生成payload
+        
+    4、宏病毒：MS Office Macro
+        1）、Payload-MS Office Macro—选择监听—生成复制
+        2）、创建WORD，开发工具—运行宏—宏名—创建
+        3）、将原本自带的代码清空，然后粘贴CobaltStrike宏生成的代码，保存
+        4）、保存弹出消息：以下内容无法保存在未启用宏的文档中。跟着提示做，选择否，文件类型选2003—保存
+
+    利用脚本或批处理文件
+        生成 Windows 批处理脚本（.bat或 .cmd），通过脚本下载和执行 payload。生成并执行快捷方式，利用社交工程引导用户执行脚本
+
+    创建自定义的恶意可执行文件，利用特定的文件类型掩盖其真正用途
+        例如：创建一个看似正常的 .jpg文件，但实际上它内部可能包含恶意代码
+
+    隐藏在合法软件中
+        在合法软件的情况下生成 payload，引用 JavaScript、VBScript 等
+        利用一种文件格式作为载体，例如自解压缩的文件、壳程序等
+
+### Attacks
+
+        Scripted Web Delivery (S)
+        Signed Applet Attack
+        Smart Applet Attack
+        System Profiler
+        Spear Phish
+
+    1、Scripted Web Delivery (S)
+    功能描述：该选项用于通过指定的 URL 交付恶意 payload 整合，包括合并 JavaScript 代码，通常用作客户端攻击的手段。
+    使用步骤：
+        打开 Cobalt Strike，选择 Attacks-> Scripted Web Delivery
+        选择要使用的 payload，可以选择 PowerShell、JavaScript，或者其他类型的 payload。
+        填写 URL：提供提供 payload 所需的 URL。可以添加一些 JavaScript 代码来增强效果，例如执行反向 shell。
+    使用结果：将生成的恶意链接发给目标，诱导他们访问，从而下载和执行 payload。
+    效果：一旦目标访问该链接，Cobalt Strike 将在目标系统上植入并执行恶意代码，实现远程控制。
+
+    2、Signed Applet Attack
+    功能描述：该选项用于生成一个 Java Applet，这个 Applet 可以在目标系统上运行，并具有权限。
+    使用步骤：
+        选择 Signed Applet Attack。
+        生成 Payload：Cobalt Strike 会提供特定的步骤以生成用于攻击的 signed applet。
+        配置 Applet 设置：配置必要的参数和选项，如 JAR 文件 和 证书。
+        诱导目标执行：通过社交工程诱导用户下载并运行该 Applet。
+    效果：成功地植入 Java Applet 后，攻击者可以获得目标系统的控制权限。
+
+    3、Smart Applet Attack
+    功能描述：该功能通过配置更复杂的 Applet 来利用未受信任的 Java 运行环境，从而获取控制权限。
+    使用步骤：
+        选择 Smart Applet Attack。
+        选择和配置 payload：设置生成的 Applet 的属性。
+        生成 Applet：生成用于客户端攻击的 Applet。
+        诱导用户执行：通过链接或其他渠道诱导目标访问该 Applet。
+    效果：成功地利用 Java Runtime 环境漏洞后，攻击者可以执行代码并获取控制。
+
+    4、System Profiler
+    功能描述：这个功能用于获取目标系统的技术信息，例如操作系统版本、安装的应用程序和其他环境信息。
+    使用步骤：
+        选择 System Profiler。
+        生成并配置配置文件：根据需要生成信息，从目标机器上收集并汇总。
+        执行配置文件：通过其他系列攻击进一步利用收集到的信息。
+    效果：通过获得系统信息，攻击者可以更好地定制后续攻击，例如选择正确的漏洞进行利用。
+
+    5、Spear Phish
+    功能描述：Spear Phishing 是一种利用社交工程针对特定目标发送恶意链接或附件的技术。
+    使用步骤：
+        选择 Spear Phish。
+        配置邮件参数：输入目标用户的邮件地址、主题、邮件内容和恶意链接。
+        发送邮件：执行邮件发送，攻击者可以选择利用第三方服务或自己配置 SMTP 服务。
+        诱导打开：用户一旦点击邮件中的链接或附件，攻击便得以实施。
+    效果：成功地植入恶意代码，并确保攻击者可以从该目标系统建立反向连接。
+
+
