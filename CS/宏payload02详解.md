@@ -104,6 +104,7 @@
     End Sub  
 
 
+代码说明:
 
     该宏的主要作用是利用Windows的rundll32.exe进程执行恶意代码。具体步骤是：
         创建一个新的进程（rundll32.exe）。
