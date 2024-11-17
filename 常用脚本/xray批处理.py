@@ -43,14 +43,6 @@ def do_scan(target_url, output_dir):
     try:
         logging.info("Scanning {}...".format(target_url))  # 打印当前正在扫描的URL
         result = subprocess.run(command, capture_output=True, text=True)
-        
-       # 如果要暂时详细执行信息，取消这段注释，并注释上一行
-	#result = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-	# # 实时读取标准输出和标准错误流
-	#for stdout_line in iter(result.stdout.readline, ""):
-	#    logging.info(stdout_line.strip())
-	#result.stdout.close()
-	#returncode = result.wait()
 	        
         if result.returncode != 0:
             logging.error("Error scanning {}: {}".format(target_url, result.stderr))
