@@ -47,6 +47,7 @@ bp导入这个ckm-jdk11插件使用
 文本编辑：
 https://www.sublimetext.com/download
 https://zh-cn.emeditor.com
+https://notepad-plus-plus.org/downloads/
 
 VScode:
 https://code.visualstudio.com/
@@ -87,15 +88,20 @@ https://github.com/AntSwordProject/AntSword-Loader
 wireshark: https://www.wireshark.org/download.html
 proxifier: https://www.proxifier.com/
 
-AWVS
+AWVS：
+安装包
 
+Xray：
+https://github.com/chaitin/xray
 
-CS搭建
+CS：
+https://github.com/safe8999/safeNotes/blob/main/CS/01%E3%80%81CS%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.md
+
 
 
 
 浏览器插件
-Google
+Google：
 Wappalyzer
 Proxy SwitchyOmega
 Shodan
@@ -103,7 +109,7 @@ FindSomething
 Open Multiple URLs
 Link Gopher  
 
-Firefox
+Firefox：
 Wappalyzer
 HackBar V2
 Show site IP
