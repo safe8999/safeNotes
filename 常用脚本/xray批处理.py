@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 import os
-import hashlib
 import re
 import subprocess
 from queue import Queue
 from threading import Thread
 import argparse
 import logging
+from urllib.parse import urlparse
 
 # 设置日志
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -28,22 +28,31 @@ def get_targets(input_file):
 
     return queue
 
+def extract_domain(url):
+    """从给定的 URL 中提取域名"""
+    parsed_url = urlparse(url)
+    domain = parsed_url.netloc  # 获取域名部分
+    return domain
+
 def do_scan(target_url, output_dir):
     """执行Xray扫描并保存输出"""
-    output_filename = hashlib.md5(target_url.encode("utf-8")).hexdigest()
+    # 提取域名作为输出文件名
+    output_filename = extract_domain(target_url)
+
+    # 确保文件名安全
+    output_filename = re.sub(r'[<>:"/\\|?*]', '_', output_filename)  # 替换无效字符
     command = [
         "C:/tools/xray_windows_amd64/xray_windows_amd64.exe",  # Xray工具路径（需要修改的地方）
         "webscan",
         "--basic-crawler",
         target_url,
-        "--html-output", os.path.join(output_dir, "{}.html".format(output_filename))  # 使用format替代F-string
+        "--html-output", os.path.join(output_dir, "{}.html".format(output_filename))  # 使用域名作为输出文件名
     ]
-       #xray_windows_amd64.exe webscan --basic-crawler http:xxx.com --html-output out.html
 
     try:
         logging.info("Scanning {}...".format(target_url))  # 打印当前正在扫描的URL
         result = subprocess.run(command, capture_output=True, text=True)
-	        
+        
         if result.returncode != 0:
             logging.error("Error scanning {}: {}".format(target_url, result.stderr))
     except Exception as e:
