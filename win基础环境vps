@@ -3,43 +3,46 @@ Firefox: http://www.firefox.com.cn/download/#product-desktop-release
 
 JDK21
 https://www.oracle.com/cn/java/technologies/downloads/#jdk21-windows
-oracle登录邮箱:wanglin78999@gmail.com
-oracle登录密码:QQQqqq..33
+oracle邮箱密码：https://www.dreamkobojapan.com/course/jdk/jdk-oracle-account
 配置Java环境变量
 
-BP24.5.4Jar包
-https://portswigger.net/burp/releases
+BP:
+    BP24.5.4Jar包
+    https://portswigger.net/burp/releases
 
-BP破解
-BurpLoaderKeygen_v1.17:BP破解-->tg群:https://t.me/BurpLoaderKeygen
-java -jar BurpLoaderKeygen_v1.17.jar
+    BP破解
+    BurpLoaderKeygen_v1.17:BP破解-->tg群:https://t.me/BurpLoaderKeygen
+    java -jar BurpLoaderKeygen_v1.17.jar
 
-burp.bat脚本:
-修改jdk安装路径,bp破解脚本路径,以及bp安装路径
-"C:\Program Files\Java\jdk-21\bin\java.exe" "--add-opens=java.desktop/javax.swing=ALL-UNNAMED" "--add-opens=java.base/java.lang=ALL-UNNAMED" "--add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED" "--add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED" "--add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED" "-javaagent:C:/Users/Administrator/Desktop/bp/BurpLoaderKeygen_v1.17.jar" "-noverify" "-jar" "C:\Users\Administrator\Desktop\bp\burpsuite_pro_v2024.5.4.jar" 
+    burp.bat脚本:
+    修改jdk安装路径,bp破解脚本路径,以及bp安装路径
+    "C:\Program Files\Java\jdk-21\bin\java.exe" "--add-opens=java.desktop/javax.swing=ALL-UNNAMED" "--add-opens=java.base/java.lang=ALL-UNNAMED" "--add-opens=java.base/jdk.internal.org.objectweb.asm=ALL-UNNAMED" "--add-opens=java.base/jdk.internal.org.objectweb.asm.tree=ALL-UNNAMED" "--add-opens=java.base/jdk.internal.org.objectweb.asm.Opcodes=ALL-UNNAMED" "-javaagent:C:/Users/Administrator/Desktop/bp/BurpLoaderKeygen_v1.17.jar" "-noverify" "-jar" "C:\Users\Administrator\Desktop\bp\burpsuite_pro_v2024.5.4.jar" 
 
-burp.vbs脚本:修改burp.bat文件路径
-Set WshShell = CreateObject("WScript.Shell")
-WshShell.Run chr(34) & "C:\Users\Administrator\Desktop\bp\burp.bat" & Chr(34), 0
-Set WshShell = Nothing
+    burp.vbs脚本:修改burp.bat文件路径
+    Set WshShell = CreateObject("WScript.Shell")
+    WshShell.Run chr(34) & "C:\Users\Administrator\Desktop\bp\burp.bat" & Chr(34), 0
+    Set WshShell = Nothing
 
-第一次启动手动激活下
+    第一次启动手动激活下
 
-安装浏览器代理插件:Proxy SwitchyOmega 
-代理到本地127.0.0.1:8080 
-配置浏览器证书:访问:http://burp  
+    安装浏览器代理插件:Proxy SwitchyOmega 
+    代理到本地127.0.0.1:8080 
+    配置浏览器证书:访问:http://burp  
 
-验证码爆破插件：
-captcha-killer-modified验证码插件需要用到python,下载python:https://www.python.org/downloads/release/python-3119/
-python安装程序以管理员权限打开安装
-BP验证码插件captcha-killer:下载版本ckm-jdk11跟zip文件,把他们放在同一个文件夹里面
-https://github.com/f0ng/captcha-killer-modified/releases
-然后到安装目录执行ddddorc安装:
-pip install -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com ddddocr aiohttp
-需要安装VC++2019才能使用
-https://aka.ms/vs/16/release/VC_redist.x64.exe
-然后执行使用: python codereg.py
-bp导入这个ckm-jdk11插件使用
+    验证码爆破插件：
+    captcha-killer-modified验证码插件需要用到python,下载python:https://www.python.org/downloads/release/python-3119/
+    python安装程序以管理员权限打开安装
+    BP验证码爆破插件captcha-killer:下载版本ckm-jdk11跟zip文件,把他们放在同一个文件夹里面
+    https://github.com/f0ng/captcha-killer-modified/releases
+    然后到安装目录执行ddddorc安装:
+    pip install -i http://mirrors.aliyun.com/pypi/simple/ --trusted-host mirrors.aliyun.com ddddocr aiohttp
+    需要安装VC++2019才能使用
+    https://aka.ms/vs/16/release/VC_redist.x64.exe
+    然后执行使用: python codereg.py
+    bp导入这个ckm-jdk11插件使用
+    
+    # BP  Turbo Intruder插件
+    # https://www.secpulse.com/archives/126527.html
 
 # Clash-verge:代理
 # https://github.com/zzzgydi/clash-verge/releases
@@ -54,9 +57,6 @@ https://code.visualstudio.com/
 
 xshell+xftp
 https://www.xshell.com/zh/free-for-home-school/
-
-# BP  Turbo Intruder插件
-# https://www.secpulse.com/archives/126527.html
 
 Yakit:
 https://github.com/yaklang/yakit
@@ -88,11 +88,14 @@ https://github.com/AntSwordProject/AntSword-Loader
 wireshark: https://www.wireshark.org/download.html
 proxifier: https://www.proxifier.com/
 
-AWVS：
-安装包
+AWVS：安装包
 
 Xray：
 https://github.com/chaitin/xray
+Super-xray
+https://github.com/4ra1n/super-xray
+rad爬虫联动Xray：
+https://github.com/chaitin/rad
 
 CS：
 https://github.com/safe8999/safeNotes/blob/main/CS/01%E3%80%81CS%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.md
