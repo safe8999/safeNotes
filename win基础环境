@@ -88,19 +88,19 @@ https://github.com/AntSwordProject/AntSword-Loader
 wireshark: https://www.wireshark.org/download.html
 proxifier: https://www.proxifier.com/
 
-AWVS：安装包
+AWVS、Nessus
 
-xray：
+xray1.x系列：
 https://github.com/chaitin/xray
-rad：
 https://github.com/chaitin/rad
-Super-xray
 https://github.com/4ra1n/super-xray
 
-CS：
-https://github.com/safe8999/safeNotes/blob/main/CS/01%E3%80%81CS%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.md
+xray2.x系列：
+https://github.com/chaitin/xpoc
+https://github.com/chaitin/xapp
+https://github.com/chaitin/xray-plugins
 
-
+CobaltStrike
 
 
 浏览器插件
