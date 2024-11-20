@@ -48,9 +48,12 @@ BP:
 # https://github.com/zzzgydi/clash-verge/releases
 
 文本编辑：
-https://www.sublimetext.com/download
-https://zh-cn.emeditor.com
-https://notepad-plus-plus.org/downloads/
+    Sublimetext:
+        https://www.sublimetext.com/download
+    Emeditor:
+        https://zh-cn.emeditor.com
+    Notepad-plus:
+        https://notepad-plus-plus.org/downloads/
 
 VScode:
 https://code.visualstudio.com/
@@ -58,14 +61,12 @@ https://code.visualstudio.com/
 xshell+xftp
 https://www.xshell.com/zh/free-for-home-school/
 
-Yakit:
-https://github.com/yaklang/yakit
+网络抓包:
+wireshark: https://www.wireshark.org/download.html
+proxifier: https://www.proxifier.com/
 
 URLFinder:
 https://github.com/pingc0y/URLFinder
-
-OWASP_ZAP:
-https://github.com/zaproxy/zaproxy
 
 御剑:
 https://github.com/foryujian/yjdirscan
@@ -84,11 +85,16 @@ https://github.com/kong030813/Z-Godzilla_ekp
 https://github.com/AntSwordProject/antSword
 https://github.com/AntSwordProject/AntSword-Loader
 
-网络抓包:
-wireshark: https://www.wireshark.org/download.html
-proxifier: https://www.proxifier.com/
-
 AWVS、Nessus
+
+Yakit:
+https://github.com/yaklang/yakit
+
+Nuclei:
+https://github.com/projectdiscovery/nuclei
+
+ZAP:
+https://github.com/zaproxy/zaproxy
 
 xray1.x系列：
 https://github.com/chaitin/xray
