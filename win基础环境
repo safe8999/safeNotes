@@ -55,6 +55,9 @@ BP:
     Notepad-plus:
         https://notepad-plus-plus.org/downloads/
 
+Everything：文件搜索
+https://www.voidtools.com/zh-cn/downloads/
+
 VScode:
 https://code.visualstudio.com/
 
@@ -85,13 +88,13 @@ https://github.com/kong030813/Z-Godzilla_ekp
 https://github.com/AntSwordProject/antSword
 https://github.com/AntSwordProject/AntSword-Loader
 
-AWVS、Nessus
-
-Yakit: 
-https://github.com/yaklang/yakit
+AWVS、Nessus、Appscan、Invicti
 
 ZAP: 
 https://github.com/zaproxy/zaproxy
+
+Yakit: 
+https://github.com/yaklang/yakit
 
 xray1.x系列：
 https://github.com/chaitin/xray
