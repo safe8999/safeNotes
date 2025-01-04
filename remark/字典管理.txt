@@ -1,0 +1,29 @@
+社工字典
+https://weakpass.com/generate
+https://www.shentoushi.top/tools/dict/index.php
+去重
+https://uutool.cn/unique/
+过滤长度空格
+https://uutool.cn/str-filter/
+去掉纯数字
+https://www.bejson.com/text/text_clear
+
+常用账号
+admin
+root
+caiwu
+tg
+system
+user
+ws
+账号常用词组 ，不区分大小写 去掉小数点
+00,11,22,12,77,88,66,55,33,99,01,001,123,000,111,333,555,666,777,888,999,520,789,qqq,aaa,abc,qaz,qwe,asd,zxc,@,1234,qwer,asdf,zxcv,1357,2468,0123,1230,6789,6666,8888,5555,9999,12345,123456
+
+常用密码
+system
+user
+wang
+admin
+root
+密码常用词组，中右点. 最近10年 +其他弱密码字典
+00,11,22,12,77,88,66,55,33,99,01,001,123,000,111,333,555,666,777,888,999,520,789,qqq,aaa,abc,qaz,qwe,asd,zxc,@,1234,1qaz,qwer,asdf,zxcv,1357,2468,0123,1230,6789,6666,8888,5555,9999,12345,123456

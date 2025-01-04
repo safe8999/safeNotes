@@ -1,0 +1,37 @@
+Burp Suite官网下载：
+https://portswigger.net/burp/communitydownload
+
+JDK官网下载
+https://www.oracle.com/hk/java/technologies/downloads/#java21
+oracle登录邮箱：wanglin78999@gmail.com
+oracle登录密码：QQQqqq..33
+
+解压tar -zxvf /root/jdk.tar.gz ../opt
+编辑环境变量：vim /etc/profile
+在文件末尾添加
+export JAVA_HOME=/opt/jdk21
+export CLASSPATH=.:${JAVA_HOME}/lib
+export PATH=${JAVA_HOME}/bin:$PATH
+source /etc/profile  立即生效
+
+设置系统默认java
+update-alternatives --install /usr/bin/java java /opt/jdk21/bin/java 1
+update-alternatives --install /usr/bin/javac javac /opt/jdk21/bin/javac 1
+update-alternatives --set java /opt/jdk21/bin/java
+update-alternatives --set javac /opt/jdk21/bin/javac
+source /etc/profile  立即生效
+
+删除系统默认java
+update-alternatives --remove java /opt/jdk17/bin/java
+update-alternatives --remove javac /opt/jdk17/bin/javac
+source /etc/profile   立即生效
+
+安装openjdk
+java -version
+yum list java* | grep java-1.8.0-openjdk
+yum install java-1.8.0-openjdk.x86_64 -y
+
+切换jdk版本
+alternatives --config java
+按回车取消 或者输入选项编号
+
